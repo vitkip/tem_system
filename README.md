@@ -2,7 +2,7 @@
 
 <p align="center">
 <img src="https://github.com/vitkip/tem_system/blob/main/uploads/68050fb4eabf0_hasak.png" width="100" style="max-width: 100%; alt="Build Status">
-<a href="https://www.facebook.com/phathasira">facebook:ວຣ ນັນທິວັດທະໂນ</a>
+<a href="https://www.facebook.com/phathasira" align="center">facebook:ວຣ ນັນທິວັດທະໂນ</a>
 </p>
 
 
