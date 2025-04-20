@@ -1,3 +1,11 @@
+<p align="center"><a href="https://www.facebook.com/phathasira" target="_blank"><img src="https://github.com/vitkip/tem_system/blob/main/assets/logo.png" width="400" alt=" Logo"></a></p>
+
+<p align="center">
+<a href="https://www.facebook.com/phathasira">
+<img src="https://github.com/vitkip/tem_system/blob/main/uploads/68050fb4eabf0_hasak.png" alt="Build Status">facebook:ວຣ ນັນທິວັດທະໂນ</a>
+</p>
+
+
 ## 📋 🎯 ສະຫຼຸບລະບົບທີ່ເຮົາເຮັດສຳເລັດແລ້ວ
 ໝວດໝູ່ | ລາຍລະອຽດ | ສະຖານະ
 - ✅ ລະບົບຈັດເກັບຂໍ້ມູນພຣະ/ແມ່ຊີ/ເນລ | CRUD (ເພີ່ມ-ແກ້ໄຂ-ລົບ-ເບິ່ງຂໍ້ມູນ) ຄົບ | ສຳເລັດແລ້ວ
