@@ -1,8 +1,9 @@
 <p align="center"><a href="https://www.facebook.com/phathasira" target="_blank"><img src="https://github.com/vitkip/tem_system/blob/main/assets/logo.png" width="400" alt=" Logo"></a></p>
 
 <p align="center">
-<a href="https://www.facebook.com/phathasira">
-<img src="https://github.com/vitkip/tem_system/blob/main/uploads/68050fb4eabf0_hasak.png" width="100" style="max-width: 100%; alt="Build Status">facebook:ວຣ ນັນທິວັດທະໂນ</a>
+<img src="https://github.com/vitkip/tem_system/blob/main/uploads/68050fb4eabf0_hasak.png" width="100" style="max-width: 100%; alt="Build Status">
+<hr>
+<a href="https://www.facebook.com/phathasira">facebook:ວຣ ນັນທິວັດທະໂນ</a>
 </p>
 
 
