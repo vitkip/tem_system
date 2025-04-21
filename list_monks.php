@@ -7,49 +7,63 @@ $stmt = $pdo->query("SELECT * FROM monks");
 $monks = $stmt->fetchAll();
 ?>
 
-<div class="p-8 max-w-7xl mx-auto">
-    <h1 class="text-3xl font-bold mb-6 text-center text-indigo-700">รายการข้อมูลพระ/แม่ชี/เณร</h1>
-   <!-- ปุ่มเพิ่มพระใหม่ -->
-   <div class="flex justify-end mb-6">
-        <a href="add_monk.php" class="bg-indigo-600 text-white px-5 py-2 rounded hover:bg-indigo-700">
-            ➕ เพิ่มพระ/แม่ชี/เณร
-        </a>
-    </div
-    <div class="bg-white p-6 rounded-lg shadow-md">
-        <table id="monkTable" class="display w-full">
-            <thead class="bg-indigo-50">
-                <tr>
-                    <th class="px-4 py-2 text-left">ลำดับ</th>
-                    <th class="px-4 py-2 text-left">รูปถ่าย</th>
-                    <th class="px-4 py-2 text-left">ชื่อ</th>
-                    <th class="px-4 py-2 text-left">วัดปัจจุบัน</th>
-                    <th class="px-4 py-2 text-left">ประเภท</th>
-                    <th class="px-4 py-2 text-left">การทำงาน</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($monks as $index => $monk): ?>
-                <tr class="border-b hover:bg-gray-50">
-                    <td class="px-4 py-2"><?= $index + 1 ?></td>
-                    <td class="px-4 py-2">
-                        <?php if ($monk['photo']): ?>
-                            <img src="uploads/<?= htmlspecialchars($monk['photo']) ?>" class="h-12 w-12 rounded-full object-cover">
-                        <?php else: ?>
-                            <span class="text-gray-400">ไม่มีรูป</span>
-                        <?php endif; ?>
-                    </td>
-                    <td class="px-4 py-2"><?= htmlspecialchars($monk['prefix']) . ' ' . htmlspecialchars($monk['first_name']) . ' ' . htmlspecialchars($monk['last_name']) ?></td>
-                    <td class="px-4 py-2"><?= htmlspecialchars($monk['current_temple']) ?></td>
-                    <td class="px-4 py-2"><?= htmlspecialchars($monk['prefix']) ?></td>
-                    <td class="px-4 py-2 space-x-2">
-                        <a href="view_monk.php?id=<?= $monk['id'] ?>" class="inline-block bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 text-sm">ดูข้อมูล</a>
-                        <a href="edit_monk.php?id=<?= $monk['id'] ?>" class="inline-block bg-yellow-400 text-white px-3 py-1 rounded hover:bg-yellow-500 text-sm">แก้ไข</a>
-                        <button onclick="confirmDelete(<?= $monk['id'] ?>)" class="inline-block bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm">ลบ</button>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+<div class="min-h-screen bg-gray-100 py-6">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- หัวข้อและปุ่มเพิ่ม -->
+        <div class="mb-6">
+            <h1 class="text-3xl font-bold text-center text-indigo-700 mb-4">รายการข้อมูลพระ/แม่ชี/เณร</h1>
+            <div class="flex justify-end">
+                <a href="add_monk.php" class="bg-indigo-600 text-white px-5 py-2 rounded-lg hover:bg-indigo-700 transition duration-200 ease-in-out shadow-md">
+                    ➕ เพิ่มพระ/แม่ชี/เณร
+                </a>
+            </div>
+        </div>
+
+        <!-- ตารางข้อมูล -->
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+            <div class="p-6">
+                <table id="monkTable" class="display w-full">
+                    <thead class="bg-indigo-50">
+                        <tr>
+                            <th class="px-4 py-2 text-left">ลำดับ</th>
+                            <th class="px-4 py-2 text-left">รูปถ่าย</th>
+                            <th class="px-4 py-2 text-left">ชื่อ</th>
+                            <th class="px-4 py-2 text-left">วัดปัจจุบัน</th>
+                            <th class="px-4 py-2 text-left">ประเภท</th>
+                            <th class="px-4 py-2 text-left">การทำงาน</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($monks as $index => $monk): ?>
+                        <tr class="border-b hover:bg-gray-50 transition duration-150">
+                            <td class="px-4 py-2"><?= $index + 1 ?></td>
+                            <td class="px-4 py-2">
+                                <?php if ($monk['photo']): ?>
+                                    <img src="uploads/<?= htmlspecialchars($monk['photo']) ?>" 
+                                         class="h-12 w-12 rounded-full object-cover border-2 border-gray-200">
+                                <?php else: ?>
+                                    <div class="h-12 w-12 rounded-full bg-gray-200 flex items-center justify-center">
+                                        <span class="text-gray-500">ไม่มีรูป</span>
+                                    </div>
+                                <?php endif; ?>
+                            </td>
+                            <td class="px-4 py-2"><?= htmlspecialchars($monk['prefix']) . ' ' . htmlspecialchars($monk['first_name']) . ' ' . htmlspecialchars($monk['last_name']) ?></td>
+                            <td class="px-4 py-2"><?= htmlspecialchars($monk['current_temple']) ?></td>
+                            <td class="px-4 py-2"><?= htmlspecialchars($monk['prefix']) ?></td>
+                            <td class="px-4 py-2 space-x-2">
+                                <a href="view_monk.php?id=<?= $monk['id'] ?>" 
+                                   class="inline-block bg-green-500 text-white px-3 py-1 rounded-lg hover:bg-green-600 transition duration-200 text-sm shadow-sm">ดูข้อมูล</a>
+                                <a href="edit_monk.php?id=<?= $monk['id'] ?>" 
+                                   class="inline-block bg-yellow-400 text-white px-3 py-1 rounded-lg hover:bg-yellow-500 transition duration-200 text-sm shadow-sm">แก้ไข</a>
+                                <button onclick="confirmDelete(<?= $monk['id'] ?>)" 
+                                        class="inline-block bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600 transition duration-200 text-sm shadow-sm">ลบ</button>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 
