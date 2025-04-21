@@ -1,31 +1,37 @@
 <?php
+session_start();
 require 'db.php';
+include 'header.php';
+
+// ✅ เช็กสิทธิ์
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
+    die('<div class="text-center text-red-600 mt-10 text-xl font-bold">ເຂົ້າໃຊ້ໄດ້ສຳລັບ Admin ເທົ່ານັ້ນ!</div>');
+}
 
 if (!isset($_GET['id'])) {
-    die('ไม่พบข้อมูลที่ต้องการลบ');
+    header('Location: list_monks.php');
+    exit();
 }
 
 $id = $_GET['id'];
 
-// ดึงข้อมูลรูปก่อนลบ
+// ດຶງຊື່ໄຟລ໌ຮູບຖ່າຍເພື່ອຈະລົບໄຟລ໌ໃນ server ດ້ວຍ
 $stmt = $pdo->prepare("SELECT photo FROM monks WHERE id = ?");
 $stmt->execute([$id]);
 $monk = $stmt->fetch();
 
-if (!$monk) {
-    die('ไม่พบข้อมูลในฐานข้อมูล');
+if ($monk && !empty($monk['photo'])) {
+    $photoPath = "uploads/" . $monk['photo'];
+    if (file_exists($photoPath)) {
+        unlink($photoPath); // ລົບໄຟລ໌ຮູບອອກ
+    }
 }
 
-// ลบรูปถ้ามี
-if (!empty($monk['photo']) && file_exists("uploads/" . $monk['photo'])) {
-    unlink("uploads/" . $monk['photo']);
-}
-
-// ลบข้อมูลในฐานข้อมูล
+// ລົບຂໍ້ມູນໃນຖານຂໍ້ມູນ
 $stmt = $pdo->prepare("DELETE FROM monks WHERE id = ?");
 $stmt->execute([$id]);
 
-echo "ลบข้อมูลเรียบร้อยแล้ว!";
-header("refresh:1; url=list_monks.php");
-exit;
+// ຫຼັງຈາກລົບແລ້ວ ➔ redirect ກັບໄປໜ້າ list ພ້ອມສົ່ງຂໍ້ຄວາມ deleted=success
+header('Location: list_monks.php?deleted=success');
+exit();
 ?>

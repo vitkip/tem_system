@@ -2,22 +2,30 @@
 require 'db.php';
 include 'header.php';
 
+if (!isset($_SESSION['user_id'])) {
+    header('Location: register/login.php');
+    exit();
+}
+// ไม่ใช่แอดมิน ห้ามเข้า
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+    die('<div class="text-red-600 font-bold text-center mt-10">ທ່ານບໍ່ມີສິດເຂົ້າໃຊ້ໜ້ານີ້!</div>');
+}
+
 if (!isset($_GET['id'])) {
-    die('<div class="text-center text-red-600 mt-10 text-xl font-bold">ไม่พบข้อมูลที่ต้องการแก้ไข</div>');
+    die('<div class="text-center text-red-600 mt-10 text-xl font-bold">ບໍ່ພົບຂໍ້ມູນທີ່ຈະແກ້ໄຂ</div>');
 }
 
 $id = $_GET['id'];
 
-// ดึงข้อมูลพระ/แม่ชี/เณร
+// ດຶງຂໍ້ມູນພະ/ແມ່ຊີ/ເນນ
 $stmt = $pdo->prepare("SELECT * FROM monks WHERE id = ?");
 $stmt->execute([$id]);
 $monk = $stmt->fetch();
 
 if (!$monk) {
-    die('<div class="text-center text-red-600 mt-10 text-xl font-bold">ไม่พบข้อมูลในฐานข้อมูล</div>');
+    die('<div class="text-center text-red-600 mt-10 text-xl font-bold">ບໍ່ພົບຂໍ້ມູນໃນຖານຂໍ້ມູນ</div>');
 }
 
-// ถ้ามีการส่งฟอร์มมา
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $prefix = $_POST['prefix'];
     $first_name = $_POST['first_name'];
@@ -36,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $certificate_number = $_POST['certificate_number'];
     $notes = $_POST['notes'];
 
-    // อัปโหลดรูปใหม่ถ้ามี
+    // ຈັດການອັບໂຫຼດຮູບ
     if (isset($_FILES['photo']) && $_FILES['photo']['error'] == 0) {
         $targetDir = "uploads/";
         $fileName = time() . "_" . basename($_FILES["photo"]["name"]);
@@ -56,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $photo = $monk['photo'];
     }
 
-    // อัปเดตข้อมูล
+    // ອັບເດດຂໍ້ມູນ
     $sql = "UPDATE monks SET
         prefix = :prefix,
         first_name = :first_name,
@@ -104,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <script>
         Swal.fire({
             icon: 'success',
-            title: 'บันทึกข้อมูลเรียบร้อยแล้ว!',
+            title: 'ແກ້ໄຂຂໍ້ມູນສຳເລັດ!',
             showConfirmButton: false,
             timer: 1500
         }).then(function(){
@@ -114,14 +122,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 ?>
-
-<!-- หน้า Form -->
+<!-- ຫນ້າຟອມແກ້ໄຂ -->
 <div class="p-8 max-w-4xl mx-auto">
-    <h1 class="text-3xl font-bold text-center text-indigo-700 mb-8">แก้ไขข้อมูลพระ/แม่ชี/เณร</h1>
+    <h1 class="text-3xl font-bold text-center text-indigo-700 mb-8">ແກ້ໄຂຂໍ້ມູນພະ/ແມ່ຊີ/ເນນ</h1>
 
     <form method="POST" enctype="multipart/form-data" class="bg-white p-8 rounded-lg shadow space-y-6">
 
-        <!-- รูป Preview -->
+        <!-- ຮູບ Preview -->
         <div class="flex justify-center mb-6">
             <?php if ($monk['photo']): ?>
                 <img id="preview-image" src="uploads/<?= htmlspecialchars($monk['photo']) ?>" class="h-32 w-32 rounded-full object-cover border">
@@ -132,111 +139,112 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-                <label class="block mb-2 text-gray-700">ประเภท:</label>
+                <label class="block mb-2 text-gray-700">ປະເພດ:</label>
                 <select name="prefix" required class="w-full border rounded px-3 py-2">
-                    <option value="พระ" <?= $monk['prefix'] == 'พระ' ? 'selected' : '' ?>>พระ</option>
-                    <option value="แม่ชี" <?= $monk['prefix'] == 'แม่ชี' ? 'selected' : '' ?>>แม่ชี</option>
-                    <option value="เณร" <?= $monk['prefix'] == 'เณร' ? 'selected' : '' ?>>เณร</option>
+                    <option value="ພຣະ" <?= $monk['prefix'] == 'ພຣະ' ? 'selected' : '' ?>>ພຣະ</option>
+                    <option value="ຄຸນແມ່ຂາວ" <?= $monk['prefix'] == 'ຄຸນແມ່ຂາວ' ? 'selected' : '' ?>>ຄຸນແມ່ຂາວ</option>
+                    <option value="ສ.ນ" <?= $monk['prefix'] == 'ສ.ນ' ? 'selected' : '' ?>>ສ.ນ</option>
+                    <option value="ສັງກະລີ" <?= $monk['prefix'] == 'เณร' ? 'selected' : '' ?>>ສັງກະລີ</option>
                 </select>
             </div>
+
             <div>
-                <label class="block mb-2 text-gray-700">ชื่อ:</label>
+                <label class="block mb-2 text-gray-700">ຊື່:</label>
                 <input type="text" name="first_name" value="<?= htmlspecialchars($monk['first_name']) ?>" required class="w-full border rounded px-3 py-2">
             </div>
 
             <div>
-                <label class="block mb-2 text-gray-700">นามสกุล:</label>
+                <label class="block mb-2 text-gray-700">ນາມສະກຸນ:</label>
                 <input type="text" name="last_name" value="<?= htmlspecialchars($monk['last_name']) ?>" required class="w-full border rounded px-3 py-2">
             </div>
 
             <div>
-                <label class="block mb-2 text-gray-700">วันเกิด:</label>
+                <label class="block mb-2 text-gray-700">ວັນເກີດ:</label>
                 <input type="date" name="birth_date" value="<?= htmlspecialchars($monk['birth_date']) ?>" class="w-full border rounded px-3 py-2">
             </div>
 
             <div>
-                <label class="block mb-2 text-gray-700">สัญชาติ:</label>
+                <label class="block mb-2 text-gray-700">ສັນຊາດ:</label>
                 <input type="text" name="nationality" value="<?= htmlspecialchars($monk['nationality']) ?>" class="w-full border rounded px-3 py-2">
             </div>
 
             <div>
-                <label class="block mb-2 text-gray-700">ชนเผ่า:</label>
+                <label class="block mb-2 text-gray-700">ຊົນເຜົ່າ:</label>
                 <input type="text" name="ethnicity" value="<?= htmlspecialchars($monk['ethnicity']) ?>" class="w-full border rounded px-3 py-2">
             </div>
 
             <div>
-                <label class="block mb-2 text-gray-700">หมู่บ้านเกิด:</label>
+                <label class="block mb-2 text-gray-700">ບ້ານເກີດ:</label>
                 <input type="text" name="birthplace_village" value="<?= htmlspecialchars($monk['birthplace_village']) ?>" class="w-full border rounded px-3 py-2">
             </div>
 
             <div>
-                <label class="block mb-2 text-gray-700">อำเภอเกิด:</label>
+                <label class="block mb-2 text-gray-700">ເມືອງເກີດ:</label>
                 <input type="text" name="birthplace_district" value="<?= htmlspecialchars($monk['birthplace_district']) ?>" class="w-full border rounded px-3 py-2">
             </div>
 
             <div>
-                <label class="block mb-2 text-gray-700">จังหวัดเกิด:</label>
+                <label class="block mb-2 text-gray-700">ແຂວງເກີດ:</label>
                 <input type="text" name="birthplace_province" value="<?= htmlspecialchars($monk['birthplace_province']) ?>" class="w-full border rounded px-3 py-2">
             </div>
 
             <div>
-                <label class="block mb-2 text-gray-700">ชื่อพ่อ:</label>
+                <label class="block mb-2 text-gray-700">ຊື່ພໍ່:</label>
                 <input type="text" name="father_name" value="<?= htmlspecialchars($monk['father_name']) ?>" class="w-full border rounded px-3 py-2">
             </div>
 
             <div>
-                <label class="block mb-2 text-gray-700">ชื่อแม่:</label>
+                <label class="block mb-2 text-gray-700">ຊື່ແມ່:</label>
                 <input type="text" name="mother_name" value="<?= htmlspecialchars($monk['mother_name']) ?>" class="w-full border rounded px-3 py-2">
             </div>
 
             <div>
-                <label class="block mb-2 text-gray-700">วัดที่สังกัด:</label>
+                <label class="block mb-2 text-gray-700">ວັດທີ່ສັງກັດ:</label>
                 <input type="text" name="current_temple" value="<?= htmlspecialchars($monk['current_temple']) ?>" class="w-full border rounded px-3 py-2">
             </div>
 
             <div>
-                <label class="block mb-2 text-gray-700">วันบวช:</label>
+                <label class="block mb-2 text-gray-700">ວັນບວດ:</label>
                 <input type="date" name="ordination_date" value="<?= htmlspecialchars($monk['ordination_date']) ?>" class="w-full border rounded px-3 py-2">
             </div>
 
             <div>
-                <label class="block mb-2 text-gray-700">พรรษา:</label>
+                <label class="block mb-2 text-gray-700">ພັນສາ:</label>
                 <input type="number" name="age_pansa" value="<?= htmlspecialchars($monk['age_pansa']) ?>" class="w-full border rounded px-3 py-2">
             </div>
 
             <div>
-                <label class="block mb-2 text-gray-700">เลขที่ใบสุทธิ:</label>
+                <label class="block mb-2 text-gray-700">ເລກໃບສຸດທິ:</label>
                 <input type="text" name="certificate_number" value="<?= htmlspecialchars($monk['certificate_number']) ?>" class="w-full border rounded px-3 py-2">
             </div>
 
             <div>
-                <label class="block mb-2 text-gray-700">เปลี่ยนรูปถ่าย (ถ้ามี):</label>
+                <label class="block mb-2 text-gray-700">ເປັນຮູບໃໝ່:</label>
                 <input type="file" name="photo" id="photoInput" class="w-full border rounded px-3 py-2">
             </div>
         </div>
 
         <div>
-            <label class="block mb-2 text-gray-700">หมายเหตุเพิ่มเติม:</label>
+            <label class="block mb-2 text-gray-700">ໝາຍເຫດເພີ່ມເຕີມ:</label>
             <textarea name="notes" rows="4" class="w-full border rounded px-3 py-2"><?= htmlspecialchars($monk['notes']) ?></textarea>
         </div>
 
         <div class="text-center mt-8">
             <button type="submit" class="bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700">
-                💾 บันทึกการแก้ไข
+                💾 ບັນທຶກການແກ້ໄຂ
             </button>
-            <a href="list_monks.php" class="ml-4 text-indigo-600 underline">← กลับไปยังรายการ</a>
+            <a href="list_monks.php" class="ml-4 text-indigo-600 underline">← ກັບໄປລາຍການ</a>
         </div>
 
     </form>
 </div>
 
-<!-- สคริปต์ Preview รูป -->
+<!-- ສະແດງ Preview -->
 <script>
-document.getElementById('photoInput').addEventListener('change', function(event){
+document.getElementById('photoInput')?.addEventListener('change', function(event){
     const reader = new FileReader();
     reader.onload = function(){
-        const img = document.getElementById('preview-image');
-        img.src = reader.result;
+        document.getElementById('preview-image').src = reader.result;
     }
     if (event.target.files[0]) {
         reader.readAsDataURL(event.target.files[0]);

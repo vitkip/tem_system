@@ -6,17 +6,19 @@
 
         <!-- โลโก้ -->
         <div>
-            <img src="assets/logo.png" alt="Your Logo" class="h-50 w-16 rounded-full">
+            <img src="/tem_system/assets/logo.png" alt="Your Logo" class="h-50 w-16 rounded-full">
         </div>
 
         <!-- เมนู -->
         <nav class="flex flex-col md:flex-row md:space-x-6 items-center text-sm text-gray-500">
-            <a href="#" class="mb-2 md:mb-0 hover:text-indigo-600 transition">About</a>
-            <a href="#" class="mb-2 md:mb-0 hover:text-indigo-600 transition">Blog</a>
-            <a href="#" class="mb-2 md:mb-0 hover:text-indigo-600 transition">Jobs</a>
-            <a href="#" class="mb-2 md:mb-0 hover:text-indigo-600 transition">Press</a>
-            <a href="#" class="mb-2 md:mb-0 hover:text-indigo-600 transition">Accessibility</a>
-            <a href="#" class="mb-2 md:mb-0 hover:text-indigo-600 transition">Partners</a>
+            <a href="dashboard.php" class="mb-2 md:mb-0 hover:text-indigo-600 transition">ແດດບອດ</a>
+            <a href="list_monks.php" class="mb-2 md:mb-0 hover:text-indigo-600 transition">ລວມລາຍຊື່</a>
+            <?php if (isAdmin()): ?>
+            <a href="add_monk.php" class="mb-2 md:mb-0 hover:text-indigo-600 transition">ເພີ່ມ</a>
+            <?php endif; ?>
+            <a href="profile/profile.php" class="mb-2 md:mb-0 hover:text-indigo-600 transition">ໂປຣຟາຍ</a>
+            <a href="profile/edit_profile.php" class="mb-2 md:mb-0 hover:text-indigo-600 transition">ຕັ້ງຄ່າ</a>
+            <a href="register/logout.php" class="mb-2 md:mb-0 hover:text-indigo-600 transition">ອອກຈາກລະບົບ</a>
         </nav>
 
         <!-- ไอคอนโซเชียล -->
@@ -29,7 +31,7 @@
         </div>
 
         <!-- ลิขสิทธิ์ -->
-        <p class="text-center text-gray-400 text-xs">&copy; 2024 Your Company, Inc. All rights reserved.</p>
+        <p class="text-center text-gray-400 text-xs">&copy; 2025 ວັດປ່າໜອງບົວທອງໃຕ້</p>
     </div>
 </footer>
 

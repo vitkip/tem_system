@@ -3,46 +3,51 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// ถ้าไม่ได้ล็อกอิน กลับไปหน้า login
+// ຖ້າບໍ່ໄດ້ login ໃຫ້ກັບໄປຫນ້າ login
 if (!isset($_SESSION['user_id'])) {
-    header('Location: ../register/login.php');
+    header('Location: register/login.php');
     exit();
 }
 
-require '../db.php'; // เชื่อมต่อฐานข้อมูล
+require '../db.php'; // ເຊື່ອມຕໍ່ຖານຂໍ້ມູນ
 
-// ดึงข้อมูลผู้ใช้จาก session
+// ດຶງຂໍ້ມູນຜູ້ໃຊ້ຈາກ session
 $username = $_SESSION['username'];
 $email = $_SESSION['email'] ?? '';
 $role = $_SESSION['role'];
-
 ?>
 
 <!DOCTYPE html>
-<html lang="th">
+<html lang="lo">
 <head>
     <meta charset="UTF-8">
-    <title>โปรไฟล์ของฉัน</title>
+    <title>ໂປຣໄຟລ໌ຂອງຂ້ອຍ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans Lao', sans-serif;
+        }
+    </style>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 min-h-screen flex items-center justify-center">
 
 <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
     <div class="flex justify-center mb-6">
-    <img src="../uploads/<?= htmlspecialchars($_SESSION['profile_image'] ?? 'default.png') ?>" alt="โปรไฟล์" class="h-30 w-25 rounded-full border">
+        <img src="../uploads/<?= htmlspecialchars($_SESSION['profile_image'] ?? 'default.png') ?>" alt="ໂປຣໄຟລ໌" class="h-30 w-25 rounded-full border">
     </div>
 
     <h2 class="text-2xl font-bold text-center mb-4 uppercase"><?= htmlspecialchars($username) ?></h2>
 
     <div class="space-y-3 text-gray-700">
-        <p><strong>ชื่อผู้ใช้:</strong> <?= htmlspecialchars($username) ?></p>
-        <p><strong>อีเมล:</strong> <?= htmlspecialchars($email) ?></p>
-        <p><strong>สิทธิ์:</strong> <?= htmlspecialchars($role) ?></p>
+        <p><strong>ຊື່ຜູ້ໃຊ້:</strong> <?= htmlspecialchars($username) ?></p>
+        <p><strong>ອີເມວ:</strong> <?= htmlspecialchars($email) ?></p>
+        <p><strong>ສິດທິ:</strong> <?= htmlspecialchars($role) ?></p>
     </div>
 
     <div class="mt-6 text-center">
-        <a href="../dashboard.php" class="inline-block bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">กลับหน้าแดชบอร์ด</a>
-        <a href="../register/logout.php" class="inline-block bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 ml-2">ออกจากระบบ</a>
+        <a href="../dashboard.php" class="inline-block bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">ກັບໄປໜ້າ Dashboard</a>
+        <a href="../register/logout.php" class="inline-block bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 ml-2">ອອກຈາກລະບົບ</a>
     </div>
 </div>
 

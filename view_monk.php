@@ -3,73 +3,85 @@ require 'db.php';
 include 'header.php';
 
 if (!isset($_GET['id'])) {
-    die('<div class="text-center text-red-600 mt-10 text-xl font-bold">ไม่พบข้อมูลที่ต้องการดู</div>');
+    die('<div class="text-center text-red-600 mt-10 text-xl font-bold">ບໍ່ພົບຂໍ້ມູນທີ່ຈະເບິ່ງ</div>');
 }
 
 $id = $_GET['id'];
 
-// ดึงข้อมูลพระ/แม่ชี/เณร
+// ດຶງຂໍ້ມູນພະ/ແມ່ຊີ/ເນນ
 $stmt = $pdo->prepare("SELECT * FROM monks WHERE id = ?");
 $stmt->execute([$id]);
 $monk = $stmt->fetch();
 
 if (!$monk) {
-    die('<div class="text-center text-red-600 mt-10 text-xl font-bold">ไม่พบข้อมูลในฐานข้อมูล</div>');
+    die('<div class="text-center text-red-600 mt-10 text-xl font-bold">ບໍ່ພົບຂໍ້ມູນໃນຖານຂໍ້ມູນ</div>');
 }
 ?>
 
-<div class="p-8 max-w-4xl mx-auto">
-    <h1 class="text-3xl font-bold text-indigo-700 text-center mb-8">ข้อมูลพระ/แม่ชี/เณร</h1>
+<div class="p-8 max-w-4xl mx-auto space-y-8">
+    <h1 class="text-3xl font-bold text-indigo-700 text-center mb-8">ຂໍ້ມູນພຣະ/ແມ່ຂາວ/ເນນ</h1>
 
-    <div class="bg-white rounded-lg shadow-md p-6 space-y-6">
-        
-        <!-- รูปถ่าย -->
+    <div class="bg-white rounded-lg shadow-md p-8 space-y-8">
+
+        <!-- ຮູບຖ່າຍ -->
         <div class="flex justify-center">
             <?php if ($monk['photo']): ?>
-                <img src="uploads/<?= htmlspecialchars($monk['photo']) ?>" class="h-40 w-40 rounded-full object-cover border">
+                <img src="uploads/<?= htmlspecialchars($monk['photo']) ?>" class="h-40 w-40 rounded-full object-cover border-4 border-indigo-200 shadow">
             <?php else: ?>
-                <div class="text-gray-400">ไม่มีรูปถ่าย</div>
+                <div class="h-40 w-40 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 border">
+                    ບໍ່ມີຮູບ
+                </div>
             <?php endif; ?>
         </div>
-
-        <!-- ข้อมูล -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-            <div>
-                <p><span class="font-bold">ประเภท:</span> <?= htmlspecialchars($monk['prefix']) ?></p>
-                <p><span class="font-bold">ชื่อ:</span> <?= htmlspecialchars($monk['first_name']) . ' ' . htmlspecialchars($monk['last_name']) ?></p>
-                <p><span class="font-bold">วันเกิด:</span> <?= htmlspecialchars($monk['birth_date']) ?></p>
-                <p><span class="font-bold">สัญชาติ:</span> <?= htmlspecialchars($monk['nationality']) ?></p>
-                <p><span class="font-bold">ชนเผ่า:</span> <?= htmlspecialchars($monk['ethnicity']) ?></p>
-                <p><span class="font-bold">วัดสังกัด:</span> <?= htmlspecialchars($monk['current_temple']) ?></p>
+            <div class="inline-flex items-center justify-center w-full">
+                <hr class="w-64 h-1 my-8 bg-gray-200 border-0 rounded-sm white:bg-gray-700">
+                <div class="absolute px-4 -translate-x-1/2 bg-white left-1/2 white:bg-gray-900">
+                    <div>
+                        <span class="font-semibold text-gray-600">ຊື່:</span> <?= htmlspecialchars($monk['first_name']) ?> <?= htmlspecialchars($monk['last_name']) ?></div>
+                </div>
+            </div>
+        <!-- ຂໍ້ມູນ -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="space-y-4">
+                <div><span class="font-semibold text-gray-600">ປະເພດ:</span> <?= htmlspecialchars($monk['prefix']) ?></div>
+                <div><span class="font-semibold text-gray-600">ຊື່:</span> <?= htmlspecialchars($monk['first_name']) ?> <?= htmlspecialchars($monk['last_name']) ?></div>
+                <div><span class="font-semibold text-gray-600">ວັນເກີດ:</span> <?= htmlspecialchars($monk['birth_date']) ?></div>
+                <div><span class="font-semibold text-gray-600">ສັນຊາດ:</span> <?= htmlspecialchars($monk['nationality']) ?></div>
+                <div><span class="font-semibold text-gray-600">ຊົນເຜົ່າ:</span> <?= htmlspecialchars($monk['ethnicity']) ?></div>
+                <div><span class="font-semibold text-gray-600">ວັດປະຈຸບັນ:</span> <?= htmlspecialchars($monk['current_temple']) ?></div>
             </div>
 
-            <div>
-                <p><span class="font-bold">บ้านเกิด:</span> หมู่บ้าน <?= htmlspecialchars($monk['birthplace_village']) ?>, อำเภอ <?= htmlspecialchars($monk['birthplace_district']) ?>, จังหวัด <?= htmlspecialchars($monk['birthplace_province']) ?></p>
-                <p><span class="font-bold">ชื่อพ่อ:</span> <?= htmlspecialchars($monk['father_name']) ?></p>
-                <p><span class="font-bold">ชื่อแม่:</span> <?= htmlspecialchars($monk['mother_name']) ?></p>
-                <p><span class="font-bold">วันบวช:</span> <?= htmlspecialchars($monk['ordination_date']) ?></p>
-                <p><span class="font-bold">พรรษา:</span> <?= htmlspecialchars($monk['age_pansa']) ?></p>
-                <p><span class="font-bold">เลขที่ใบสุทธิ:</span> <?= htmlspecialchars($monk['certificate_number']) ?></p>
+            <div class="space-y-4">
+                <div><span class="font-semibold text-gray-600">ບ້ານເກີດ:</span> <?= htmlspecialchars($monk['birthplace_village']) ?>, ເມືອງ <?= htmlspecialchars($monk['birthplace_district']) ?>, ແຂວງ <?= htmlspecialchars($monk['birthplace_province']) ?></div>
+                <div><span class="font-semibold text-gray-600">ຊື່ພໍ່:</span> <?= htmlspecialchars($monk['father_name']) ?></div>
+                <div><span class="font-semibold text-gray-600">ຊື່ແມ່:</span> <?= htmlspecialchars($monk['mother_name']) ?></div>
+                <div><span class="font-semibold text-gray-600">ວັນບວດ:</span> <?= htmlspecialchars($monk['ordination_date']) ?></div>
+                <div><span class="font-semibold text-gray-600">ພັນສາ:</span> <?= htmlspecialchars($monk['age_pansa']) ?> ພັນສາ</div>
+                <div><span class="font-semibold text-gray-600">ເລກໃບສຸດທິ:</span> <?= htmlspecialchars($monk['certificate_number']) ?></div>
             </div>
-
         </div>
 
-        <!-- หมายเหตุ -->
+        <!-- ໝາຍເຫດ -->
         <?php if (!empty($monk['notes'])): ?>
-            <div class="mt-6">
-                <p class="font-bold mb-2">หมายเหตุ:</p>
-                <div class="bg-gray-100 p-4 rounded"><?= nl2br(htmlspecialchars($monk['notes'])) ?></div>
+            <div class="bg-gray-100 p-4 rounded">
+                <h2 class="font-bold text-gray-700 mb-2">ໝາຍເຫດ:</h2>
+                <p><?= nl2br(htmlspecialchars($monk['notes'])) ?></p>
             </div>
         <?php endif; ?>
 
     </div>
 
-    <!-- ปุ่มกลับ -->
-    <div class="text-center mt-8">
-        <a href="list_monks.php" class="inline-block bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700">
-            ← กลับไปยังรายการ
+    <!-- ປຸ່ມກັບໄປ-ແກ້ໄຂ -->
+    <div class="flex justify-center gap-4">
+        <a href="list_monks.php" class="bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700 transition">
+            ← ກັບໄປລາຍການ
         </a>
+        <?php if (isAdmin()): ?>
+        <a href="edit_monk.php?id=<?= $monk['id'] ?>" class="bg-yellow-400 text-white px-6 py-2 rounded hover:bg-yellow-500 transition">
+            ✏️ ແກ້ໄຂຂໍ້ມູນ
+        </a>
+        <?php endif; ?>
+
     </div>
 </div>
 
