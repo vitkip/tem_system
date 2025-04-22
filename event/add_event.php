@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 <div class="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow mt-10">
-    <h1 class="text-3xl font-bold text-center text-indigo-700 mb-6">ເພີ່ມງານກິດນິມນຕ໌</h1>
+    <h1 class="text-3xl font-bold text-center text-indigo-700 mb-6">ເພີ່ມງານກິດນິມົນ</h1>
 
     <?php if (!empty($errors)): ?>
         <div class="bg-red-100 text-red-700 p-4 rounded mb-6">

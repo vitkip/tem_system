@@ -25,7 +25,7 @@ $events = $pdo->query("SELECT * FROM events ORDER BY event_date DESC")->fetchAll
 
 <div class="max-w-7xl mx-auto p-6">
     <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold text-indigo-700">📅 ລາຍການງານກິດນິມນຕ໌</h1>
+        <h1 class="text-3xl font-bold text-indigo-700">📅 ລາຍການງານກິດນິມົນ</h1>
         <?php if (isAdmin()): ?>
             <a href="add_event.php" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow">
                 ➕ ເພີ່ມງານກິດ
