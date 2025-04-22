@@ -20,6 +20,10 @@ for ($month = 1; $month <= 12; $month++) {
     $stmt->execute([$month]);
     $chartData[] = (int) $stmt->fetchColumn();
 }
+// หา Event ภายใน 3 วัน
+$stmt = $pdo->prepare("SELECT * FROM events WHERE event_date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 3 DAY) ORDER BY event_date ASC");
+$stmt->execute();
+$upcoming_events = $stmt->fetchAll();
 
 // ดึงสรุปข้อมูล
 $countMonk = $pdo->query("SELECT COUNT(*) FROM monks WHERE prefix = 'ພຣະ'")->fetchColumn();
@@ -32,7 +36,7 @@ $countSangkhali = $pdo->query("SELECT COUNT(*) FROM monks WHERE prefix = 'ສັ
 
     <!-- Header + ปุ่มเพิ่ม -->
     <div class="flex justify-between items-center">
-        <h1 class="text-3xl font-bold text-indigo-700">ໜ້າ Dashboard</h1>
+        <h1 class="text-2xl font-bold text-indigo-700">ໜ້າສະຫຼຸບລາຍງານ|ແດງກຣາບ|ງານກິດນິມນ|ແຈ້ງເຕືອນ|</h1>
         <?php if (isAdmin()): ?>
         <a href="add_monk.php" class="inline-flex items-center bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
             ➕ ເພີ່ມພຣະ
@@ -90,7 +94,7 @@ $countSangkhali = $pdo->query("SELECT COUNT(*) FROM monks WHERE prefix = 'ສັ
     <div class="bg-white p-6 rounded-lg shadow">
 
         <div class="text-center text-gray-500 py-10">
-        <h1 class="text-3xl font-bold text-indigo-700 mb-6">Dashboard ງານກິດນິມນຕ໌</h1>
+        <h1 class="text-2xl font-bold text-indigo-700 mb-6">Dashboard ງານກິດນິມນ</h1>
 
 <!-- การ์ดสรุปสถิติ -->
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -103,8 +107,18 @@ $countSangkhali = $pdo->query("SELECT COUNT(*) FROM monks WHERE prefix = 'ສັ
         <div class="mt-2 text-gray-600">ງານທີ່ຜ່ານແລ້ວ</div>
     </div>
     <div class="bg-yellow-100 p-6 rounded-lg shadow text-center">
-        <div class="text-4xl font-bold text-yellow-700"><?= $upcoming_events ?></div>
-        <div class="mt-2 text-gray-600">ງານໃໝ່ (7 ມື້ໜ້າ)</div>
+    <?php if (!empty($upcoming_events)): ?>
+<div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6">
+    <p class="font-bold mb-2">ແຈ້ງເຕືອນ: ງານທີ່ຈະມາເຖິງມໍ່ໆນີ້</p>
+    <hr>
+    <ul class="list-disc ml-5">
+        <?php foreach ($upcoming_events as $event): ?>
+            <li><?= htmlspecialchars($event['event_name']) ?> ວັນທີ <?= htmlspecialchars($event['event_date']) ?></li>
+        <?php endforeach; ?>
+    </ul>
+</div>
+<?php endif; ?>
+       
     </div>
 </div>
 
@@ -116,6 +130,7 @@ $countSangkhali = $pdo->query("SELECT COUNT(*) FROM monks WHERE prefix = 'ສັ
 </div>
 
 <!-- Chart Script -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://code.highcharts.com/highcharts.js"></script>
 
 <script>
@@ -163,5 +178,20 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 </script>
-
+<?php if (!empty($upcoming_events)): ?>
+<script>
+Swal.fire({
+    icon: 'info',
+    title: 'ແຈ້ງເຕືອນງານທີ່ຈະມາເຖີງນີ້!',
+    html: `
+        <ul class="text-left">
+            <?php foreach ($upcoming_events as $event): ?>
+                <li><strong><?= htmlspecialchars($event['event_name']) ?></strong> ໃນວັນທີ <?= htmlspecialchars($event['event_date']) ?></li>
+            <?php endforeach; ?>
+        </ul>
+    `,
+    confirmButtonText: 'ຮັບຮູ້ແລ້ວ',
+});
+</script>
+<?php endif; ?>
 <?php include 'footer.php'; ?>

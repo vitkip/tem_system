@@ -8,6 +8,12 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     die('<div class="text-center text-red-600 mt-10 text-xl font-bold">ເຂົ້າໃຊ້ໄດ້ສຳລັບ Admin ເທົ່ານັ້ນ!</div>');
 }
 
+
+if (!isset($_SESSION['user_id'])) {
+    header('Location: register/login.php');
+    exit();
+}
+
 if (!isset($_GET['id'])) {
     header('Location: list_monks.php');
     exit();
