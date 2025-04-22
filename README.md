@@ -3,6 +3,7 @@
 ## 📂 ຜູ້ພັດທະນາ |ພັດທະນາຈາກ AI chatgpt|
 <p align="center">
 <img src="https://github.com/vitkip/tem_system/blob/main/uploads/68063716a4ef8_von.png" width="50" style="max-width: 50%; alt="Build Status">
+<br>
 <a href="https://www.facebook.com/phathasira" align="center">facebook:ວຣ ນັນທິວັດທະໂນ</a>
 </p>
 
