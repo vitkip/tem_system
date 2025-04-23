@@ -43,16 +43,12 @@ function isAdmin() {
 <nav class="bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-50">
     <div class="max-w-7xl mx-auto flex justify-between items-center">
         <div class="flex items-center">
-            <img src="/tem_system/assets/logo.png" alt="Logo" class="h-10 w-10 mr-4">
+            <a href="/tem_system/dashboard.php"><img src="/tem_system/assets/logo.png" alt="Logo" class="h-10 w-10 mr-4"></a>
             <div class="hidden md:flex space-x-6">
                 <a href="/tem_system/dashboard.php" class="px-3 py-2 rounded-md font-medium <?= ($current_page == 'dashboard.php') ? 'text-indigo-600 underline' : 'text-gray-700 hover:text-indigo-600' ?>">Dashboard</a>
                 <a href="/tem_system/list_monks.php" class="px-3 py-2 rounded-md font-medium <?= ($current_page == 'list_monks.php') ? 'text-indigo-600 underline' : 'text-gray-700 hover:text-indigo-600' ?>">ລວມລາຍຊື່</a>
                 <a href="/tem_system/event/calendar.php" class="px-3 py-2 rounded-md font-medium <?= ($current_page == 'calendar.php') ? 'text-indigo-600 underline' : 'text-gray-700 hover:text-indigo-600' ?>">ປະຕິທິນ</a>
                 
-                <?php if (isAdmin()): ?>
-                    <a href="/tem_system/add_monk.php" class="px-3 py-2 rounded-md font-medium <?= ($current_page == 'add_monk.php') ? 'text-indigo-600 underline' : 'text-gray-700 hover:text-indigo-600' ?>">ເພີ່ມ|ພຣະ|ແມ່ຂາວ|ສ.ນ</a>
-                    <a href="/tem_system/event/add_event.php" class="px-3 py-2 rounded-md font-medium <?= ($current_page == 'add_event.php') ? 'text-indigo-600 underline' : 'text-gray-700 hover:text-indigo-600' ?>">ເພີ່ມງານກິດ</a>
-                <?php endif; ?>
             </div>
         </div>
 

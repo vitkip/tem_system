@@ -50,13 +50,15 @@ $monks = $stmt->fetchAll();
                     <tr>
                         <th class="text-center">#</th>
                         <th class="text-center">ຮູບ</th>
-                        <th>ຊື່</th>
-                        <th>ວັດປະຈຸບັນ</th>
-                        <th>ປະເພດ</th>
+                        <th>ຊື່ຕາມບັນປະຈຳຕົວ</th>
+                        <th>ນາມສະກຸນ</th>
+                        <th>ບ້ານເກີດ</th>
+                        <th>ແຂວງເກີດ</th>
                         <th class="text-center">ຈັດການ</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y">
+                
                     <?php foreach ($monks as $index => $monk): ?>
                     <tr>
                         <td class="text-center"><?= $index + 1 ?></td>
@@ -68,8 +70,10 @@ $monks = $stmt->fetchAll();
                             <?php endif; ?>
                         </td>
                         <td><?= htmlspecialchars($monk['prefix'] . ' ' . $monk['first_name']) ?></td>
-                        <td><?= htmlspecialchars($monk['current_temple']) ?></td>
-                        <td><?= htmlspecialchars($monk['prefix']) ?></td>
+                        <td><?= htmlspecialchars($monk['last_name']) ?></td>
+                        <td><?= htmlspecialchars($monk['birthplace_village']) ?></td>
+                        <td><?= htmlspecialchars($monk['birthplace_province']) ?></td>
+                        
                         <td class="text-center space-x-2">
                         <?php if (isAdmin()): ?>
                          <!-- View Button -->
@@ -77,33 +81,33 @@ $monks = $stmt->fetchAll();
                                 '<?= htmlspecialchars($monk['prefix'] . ' ' . $monk['first_name']) ?>', 
                                 '<?= htmlspecialchars($monk['current_temple']) ?>',
                                 '<?= htmlspecialchars($monk['prefix']) ?>',
+                                '<?= htmlspecialchars($monk['first_name']) ?>',
+                                '<?= htmlspecialchars($monk['last_name']) ?>',
+                                '<?= htmlspecialchars($monk['birth_date']) ?>',
+                                '<?= htmlspecialchars($monk['nationality']) ?>',
+                                '<?= htmlspecialchars($monk['ethnicity']) ?>',
+                                '<?= htmlspecialchars($monk['birthplace_village']) ?>',
+                                '<?= htmlspecialchars($monk['birthplace_district']) ?>',
+                                '<?= htmlspecialchars($monk['birthplace_province']) ?>',
+                                '<?= htmlspecialchars($monk['father_name']) ?>',
+                                '<?= htmlspecialchars($monk['mother_name']) ?>',
+                                '<?= htmlspecialchars($monk['ordination_date']) ?>',
+                                '<?= htmlspecialchars($monk['age_pansa']) ?>',
+                                '<?= htmlspecialchars($monk['certificate_number']) ?>',
                                 '<?= $monk['photo'] ? 'uploads/' . htmlspecialchars(basename($monk['photo'])) : '' ?>'
                             )" 
                             class="inline-flex items-center px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white text-xs font-medium rounded shadow">
-                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7s-8.268-2.943-9.542-7z" />
-                                </svg>
                                 ເບິ່ງ
                             </button>
 
-                       
                             <!-- Edit Button -->
                                 <a href="edit_monk.php?id=<?= $monk['id'] ?>" 
                                 class="inline-flex items-center px-3 py-1.5 bg-yellow-400 hover:bg-yellow-500 text-white text-xs font-medium rounded shadow">
-                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                            d="M15.232 5.232l3.536 3.536M9 11l6 6M3 21h18" />
-                                    </svg>
                                     ແກ້ໄຂ
                                 </a>
                             <!-- Delete Button -->
                                     <button onclick="confirmDelete(<?= $monk['id'] ?>)" 
                                             class="inline-flex items-center px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white text-xs font-medium rounded shadow">
-                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                                d="M6 18L18 6M6 6l12 12" />
-                                        </svg>
                                         ລົບ
                                     </button>
                             <?php endif; ?>
@@ -175,15 +179,20 @@ $(function() {
     });
 
     $('#filterPrefix').on('change', function() {
-        table.column(4).search(this.value).draw();
-    });
+    const val = this.value;
+    if (val) {
+        table.search(val).draw();
+    } else {
+        table.search('').draw();
+    }
+});
 
     $('#searchInput').on('keyup', function() {
         table.search(this.value).draw();
     });
 });
 
-function viewProfile(name, temple, prefix, photoUrl) {
+function viewProfile(name, temple, prefix, firstName, lastName, birthDate, nationality, ethnicity, birthplaceVillage, birthplaceDistrict, birthplaceProvince, fatherName, motherName, ordinationDate, agePansa, certificateNumber, photoUrl) {
     Swal.fire({
         title: name,
         html: `
@@ -191,27 +200,18 @@ function viewProfile(name, temple, prefix, photoUrl) {
                 ${photoUrl ? `<img src="${photoUrl}" class="w-32 h-32 rounded-full object-cover border" alt="Photo">` 
                             : `<div class="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center text-gray-400">-</div>`}
                 <div class="text-left space-y-2">
-                   
-                      
-           
-                <div><span class="font-semibold text-gray-600">ປະເພດ:</span> <?= htmlspecialchars($monk['prefix']) ?></div>
-                <div><span class="font-semibold text-gray-600">ຊື່:</span> <?= htmlspecialchars($monk['first_name']) ?> <?= htmlspecialchars($monk['last_name']) ?></div>
-                <div><span class="font-semibold text-gray-600">ວັນເກີດ:</span> <?= htmlspecialchars($monk['birth_date']) ?></div>
-                <div><span class="font-semibold text-gray-600">ສັນຊາດ:</span> <?= htmlspecialchars($monk['nationality']) ?></div>
-                <div><span class="font-semibold text-gray-600">ຊົນເຜົ່າ:</span> <?= htmlspecialchars($monk['ethnicity']) ?></div>
-                <div><span class="font-semibold text-gray-600">ວັດປະຈຸບັນ:</span> <?= htmlspecialchars($monk['current_temple']) ?></div>
-            
-
-            
-                <div><span class="font-semibold text-gray-600">ບ້ານເກີດ:</span> <?= htmlspecialchars($monk['birthplace_village']) ?>, ເມືອງ <?= htmlspecialchars($monk['birthplace_district']) ?>, ແຂວງ <?= htmlspecialchars($monk['birthplace_province']) ?></div>
-                <div><span class="font-semibold text-gray-600">ຊື່ພໍ່:</span> <?= htmlspecialchars($monk['father_name']) ?></div>
-                <div><span class="font-semibold text-gray-600">ຊື່ແມ່:</span> <?= htmlspecialchars($monk['mother_name']) ?></div>
-                <div><span class="font-semibold text-gray-600">ວັນບວດ:</span> <?= htmlspecialchars($monk['ordination_date']) ?></div>
-                <div><span class="font-semibold text-gray-600">ພັນສາ:</span> <?= htmlspecialchars($monk['age_pansa']) ?> ພັນສາ</div>
-                <div><span class="font-semibold text-gray-600">ເລກໃບສຸດທິ:</span> <?= htmlspecialchars($monk['certificate_number']) ?></div>
-        
-        
-
+                    <div><span class="font-semibold text-gray-600">ປະເພດ:</span> ${prefix}</div>
+                    <div><span class="font-semibold text-gray-600">ຊື່:</span> ${firstName} ${lastName}</div>
+                    <div><span class="font-semibold text-gray-600">ວັນເກີດ:</span> ${birthDate}</div>
+                    <div><span class="font-semibold text-gray-600">ສັນຊາດ:</span> ${nationality}</div>
+                    <div><span class="font-semibold text-gray-600">ຊົນເຜົ່າ:</span> ${ethnicity}</div>
+                    <div><span class="font-semibold text-gray-600">ວັດປະຈຸບັນ:</span> ${temple}</div>
+                    <div><span class="font-semibold text-gray-600">ບ້ານເກີດ:</span> ${birthplaceVillage}, ເມືອງ ${birthplaceDistrict}, ແຂວງ ${birthplaceProvince}</div>
+                    <div><span class="font-semibold text-gray-600">ຊື່ພໍ່:</span> ${fatherName}</div>
+                    <div><span class="font-semibold text-gray-600">ຊື່ແມ່:</span> ${motherName}</div>
+                    <div><span class="font-semibold text-gray-600">ວັນບວດ:</span> ${ordinationDate}</div>
+                    <div><span class="font-semibold text-gray-600">ພັນສາ:</span> ${agePansa} ພັນສາ</div>
+                    <div><span class="font-semibold text-gray-600">ເລກໃບສຸດທິ:</span> ${certificateNumber}</div>
                 </div>
             </div>
         `,
@@ -220,11 +220,7 @@ function viewProfile(name, temple, prefix, photoUrl) {
         width: '400px',
         padding: '2em',
         background: '#fff',
-        backdrop: `
-            rgba(0,0,0,0.4)
-            left top
-            no-repeat
-        `
+        backdrop: `rgba(0,0,0,0.4) left top no-repeat`
     });
 }
 

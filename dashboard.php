@@ -1,6 +1,49 @@
 <?php
 require 'db.php';
 include 'header.php';
+
+// SQL
+$stmt = $pdo->query("
+     SELECT m.id, CONCAT(m.prefix, ' ', m.first_name, ' ', m.last_name) AS monk_name, COUNT(em.event_id) AS event_count
+    FROM monks m
+    LEFT JOIN event_monk em ON m.id = em.monk_id
+    GROUP BY m.id
+    ORDER BY event_count DESC
+");
+
+$monkStats = $stmt->fetchAll();
+
+$monkData = []; // 👈 สำหรับ JS
+foreach ($monkStats as $row) {
+    $monkData[] = [
+        'name' => $row['monk_name'],
+        'y' => (int)$row['event_count'],
+        'url' => "view_monk.php?id=" . $row['id']
+    ];
+}
+
+
+// เตรียมข้อมูลสำหรับกราฟ
+//$monkNames = [];
+$monkCounts = [];
+
+foreach ($monkStats as $row) {
+    $monkNames[] = $row['monk_name'];
+    $monkCounts[] = (int)$row['event_count'];
+}
+
+//ນັບຈຳນວນພຣະສົງໃນລາຍງານ
+$data = $pdo->query("
+    SELECT e.event_name, COUNT(am.monk_id) AS monk_count
+    FROM event_monk am
+    JOIN events e ON am.event_id = e.id
+    GROUP BY e.event_name
+    ORDER BY monk_count DESC
+    LIMIT 10
+")->fetchAll(PDO::FETCH_ASSOC);
+
+$categories = array_column($data, 'event_name');
+$monkCounts = array_column($data, 'monk_count');
 // นับงานทั้งหมด
 $stmt = $pdo->query("SELECT COUNT(*) FROM events");
 $total_events = $stmt->fetchColumn();
@@ -69,7 +112,7 @@ $countSangkhali = $pdo->query("SELECT COUNT(*) FROM monks WHERE prefix = 'ສັ
                 <i class="fas fa-child fa-2x text-yellow-700"></i>
                 <div>
                     <p class="text-2xl font-bold"><?= $countNovice ?></p>
-                    <p class="text-gray-600">ຈໍານວນເນນ</p>
+                    <p class="text-gray-600">ຈໍານວນ ສາມະເນນ</p>
                 </div>
             </div>
         </div>
@@ -94,7 +137,7 @@ $countSangkhali = $pdo->query("SELECT COUNT(*) FROM monks WHERE prefix = 'ສັ
     <div class="bg-white p-6 rounded-lg shadow">
 
         <div class="text-center text-gray-500 py-10">
-        <h1 class="text-2xl font-bold text-indigo-700 mb-6">Dashboard ງານກິດນິມນ</h1>
+        <h1 class="text-2xl font-bold text-indigo-700 mb-6">ສະແດງ ງານກິດນິມນ</h1>
 
 <!-- การ์ดสรุปสถิติ -->
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -124,6 +167,8 @@ $countSangkhali = $pdo->query("SELECT COUNT(*) FROM monks WHERE prefix = 'ສັ
 
 <!-- กราฟแสดงสถิติตามเดือน -->
 <div id="eventChart" class="bg-white p-6 rounded-lg shadow mt-8"></div>
+<div id="monkPerEventChart" class="bg-white p-6 rounded-lg shadow"></div>
+<div id="monkActivityChart" class="bg-white p-6 rounded-lg shadow mt-8"></div>
         </div>
     </div>
 
@@ -138,14 +183,31 @@ document.addEventListener('DOMContentLoaded', function () {
     Highcharts.chart('barChart', {
         chart: { type: 'column', animation: true },
         title: { text: 'ຂໍ້ມູນພຣະສົງຕາມປະເພດ' },
-        xAxis: { categories: ['ພຣະ', 'ແມ່ຂາວ', 'ເນນ', 'ສັງກະລີ'] },
+        xAxis: { categories: ['ພຣະ', 'ແມ່ຂາວ', 'ສາມະເນນ', 'ສັງກະລີ'] },
         yAxis: { min: 0, title: { text: 'ຈໍານວນ' }},
         series: [{
             name: 'ຈໍານວນ',
-            data: [<?= $countMonk ?>, <?= $countNun ?>, <?= $countNovice ?>, <?= $countSangkhali ?>]
+            data: [<?= $countMonk ?>, <?= $countNun ?>, <?= $countNovice ?>, <?= $countSangkhali ?>],
+            colorByPoint: true,
+            data: [
+                { name: 'ພຣະ', y: <?= $countMonk ?>, color: '#6366F1' },
+                { name: 'ແມ່ຂາວ', y: <?= $countNun ?>, color: '#10B981' },
+                { name: 'ສາມະເນນ', y: <?= $countNovice ?>, color: '#F59E0B' },
+                { name: 'ສັງກະລີ', y: <?= $countSangkhali ?>, color: '#EF4444' }
+            ]
         }]
     });
 
+    Highcharts.chart('monkPerEventChart', {
+    chart: { type: 'column' },
+    title: { text: 'ຈໍານວນພຣະທີ່ໄປລ່ວມງານ (Top 10)' },
+    xAxis: { categories: <?= json_encode($categories) ?> },
+    yAxis: { title: { text: 'ຈໍານວນພຣະ' } },
+    series: [{
+        name: 'ຈໍານວນພຣະ',
+        data: <?= json_encode($monkCounts) ?>
+         }]
+    });
     Highcharts.chart('pieChart', {
         chart: { type: 'pie', animation: true },
         title: { text: 'ສັດສ່ວນພຣະສົງ' },
@@ -153,10 +215,10 @@ document.addEventListener('DOMContentLoaded', function () {
             name: 'ຈໍານວນ',
             colorByPoint: true,
             data: [
-                { name: 'ພຣະ', y: <?= $countMonk ?> },
-                { name: 'ແມ່ຂາວ', y: <?= $countNun ?> },
-                { name: 'ເນນ', y: <?= $countNovice ?> },
-                { name: 'ສັງກະລີ', y: <?= $countSangkhali ?> }
+                { name: 'ພຣະ', y: <?= $countMonk ?>, color: '#6366F1' },
+                { name: 'ແມ່ຂາວ', y: <?= $countNun ?>, color: '#10B981' },
+                { name: 'ສາມະເນນ', y: <?= $countNovice ?>, color: '#F59E0B' },
+                { name: 'ສັງກະລີ', y: <?= $countSangkhali ?>, color: '#EF4444' }
             ]
         }]
     });
@@ -172,11 +234,52 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         series: [{
             name: 'ຈຳນວນງານ',
-            data: <?= json_encode($chartData) ?>
+            data: <?= json_encode($chartData) ?>,
+            color: '#F59E0B'
         }]
     });
 });
 
+Highcharts.chart('monkActivityChart', {
+    chart: { type: 'column' },
+    title: { text: 'ຈຳນວນງານກິດນິມນທີ່ພຣະໄປຮ່ວມ' },
+    xAxis: { type: 'category', title: { text: 'ລາຍຊື່ຜູ້ທີ່ໄປອອກງານ' } },
+    yAxis: {
+        min: 0,
+        max: <?= max(array_column($monkData, 'y')) ?>,
+        scrollbars:{
+            enabled: true,
+        },
+        title: { text: 'ຈຳນວນງານ' }
+    },
+    legend: { enabled: false },
+    plotOptions: {
+        series: {
+            cursor: 'pointer',
+            point: {
+                events: {
+                    click: function () {
+                        window.location.href = this.options.url;
+                    }
+                }
+            }
+        }
+    },
+    tooltip: {
+        pointFormat: 'ໄປຮ່ວມງານ: <b>{point.y}</b> ຄັ້ງ'
+    },
+    series: [{
+        name: 'ພຣະ',
+        colorByPoint: true,
+        data: <?= json_encode($monkData, JSON_UNESCAPED_UNICODE) ?>
+    }]
+});
+
+
+
+Highcharts.setOptions({
+    colors: ['#6366F1', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#3B82F6']
+});
 </script>
 <?php if (!empty($upcoming_events)): ?>
 <script>

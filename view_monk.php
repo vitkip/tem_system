@@ -19,7 +19,7 @@ if (!$monk) {
 ?>
 
 <div class="p-8 max-w-4xl mx-auto space-y-8">
-    <h1 class="text-3xl font-bold text-indigo-700 text-center mb-8">ຂໍ້ມູນພຣະ/ແມ່ຂາວ/ເນນ</h1>
+    <h1 class="text-3xl font-bold text-indigo-700 text-center mb-8">ຂໍ້ມູນພຣະ|ແມ່ຂາວ|ສາມະເນນ|</h1>
 
     <div class="bg-white rounded-lg shadow-md p-8 space-y-8">
 
@@ -40,6 +40,7 @@ if (!$monk) {
                         <span class="font-semibold text-gray-600">ຊື່:</span> <?= htmlspecialchars($monk['first_name']) ?> <?= htmlspecialchars($monk['last_name']) ?></div>
                 </div>
             </div>
+            <?php if (isAdmin()): ?>
         <!-- ຂໍ້ມູນ -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div class="space-y-4">
@@ -60,7 +61,7 @@ if (!$monk) {
                 <div><span class="font-semibold text-gray-600">ເລກໃບສຸດທິ:</span> <?= htmlspecialchars($monk['certificate_number']) ?></div>
             </div>
         </div>
-
+        <?php endif; ?>
         <!-- ໝາຍເຫດ -->
         <?php if (!empty($monk['notes'])): ?>
             <div class="bg-gray-100 p-4 rounded">

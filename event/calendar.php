@@ -19,7 +19,7 @@ foreach ($events as $event) {
 ?>
 
 <div class="flex justify-between items-center mb-6">
-    <h1 class="text-3xl font-bold text-indigo-700">ປະຕິທິນງານກິດນິມນຕ໌</h1>
+    <h1 class="text-3xl font-bold text-indigo-700">ປະຕິທິນງານກິດນິມົນ</h1>
     <?php if (isAdmin()): ?>
         <a href="/tem_system/event/add_event.php" class="bg-indigo-600 text-white px-5 py-2 rounded hover:bg-indigo-700">
             ➕ ເພີ່ມງານກິດ
