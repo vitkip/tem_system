@@ -32,6 +32,11 @@ tem_system/ ├── db.php ການເຊື່ອມຕໍ່ຖານຂໍ
 - 🚨 Popup Notification (SweetAlert)
 - 🖨️ ເອກະສານ PDF ໃຊ້ຟອນ Noto Sans Lao ເພື່ອຮອງຮັບພາສາລາວ
 
+
+### 📂 ຮ່ວມສະໜັບສະໜຸນຜູ້ພັດທະນາ
+<p align="center">
+<img src="https://github.com/vitkip/tem_system/blob/main/assets/QRCODE.PNG"  alt="Build Status">
+
 ### 📂 ຮ່ວມສະໜັບສະໜຸນຜູ້ພັດທະນາ
 <p align="center">
 <img src="https://github.com/vitkip/tem_system/blob/main/assets/QRCODE.PNG"  alt="Build Status">
