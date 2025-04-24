@@ -33,9 +33,39 @@ tem_system/ ├── db.php ການເຊື່ອມຕໍ່ຖານຂໍ
 - 🖨️ ເອກະສານ PDF ໃຊ້ຟອນ Noto Sans Lao ເພື່ອຮອງຮັບພາສາລາວ
 
 
-### 📂 ຮ່ວມສະໜັບສະໜຸນຜູ້ພັດທະນາ
+### 📂 ຕົວຢ່ງລະບົບ
 <p align="center">
-<img src="https://github.com/vitkip/tem_system/blob/main/assets/QRCODE.PNG"  alt="Build Status">
+<img src="https://github.com/vitkip/tem_system/blob/main/assets/img/demo1%20(15).png"  alt="Build Status">
+<p align="center">
+<img src="https://github.com/vitkip/tem_system/blob/main/assets/img/demo1%20(1).png"  alt="Build Status">
+<p align="center">
+<img src="https://github.com/vitkip/tem_system/blob/main/assets/img/demo1%20(2).png"  alt="Build Status">
+<p align="center">
+<img src="https://github.com/vitkip/tem_system/blob/main/assets/img/demo1%20(3).png"  alt="Build Status">
+<p align="center">
+<img src="https://github.com/vitkip/tem_system/blob/main/assets/img/demo1%20(4).png"  alt="Build Status">
+<p align="center">
+<img src="https://github.com/vitkip/tem_system/blob/main/assets/img/demo1%20(5).png"  alt="Build Status">
+<p align="center">
+<img src="https://github.com/vitkip/tem_system/blob/main/assets/img/demo1%20(6).png"  alt="Build Status">
+<p align="center">
+<img src="https://github.com/vitkip/tem_system/blob/main/assets/img/demo1%20(7).png"  alt="Build Status">
+<p align="center">
+<img src="https://github.com/vitkip/tem_system/blob/main/assets/img/demo1%20(8).png"  alt="Build Status">
+<p align="center">
+<img src="https://github.com/vitkip/tem_system/blob/main/assets/img/demo1%20(9).png"  alt="Build Status">
+<p align="center">
+<img src="https://github.com/vitkip/tem_system/blob/main/assets/img/demo1%20(10).png"  alt="Build Status">
+<p align="center">
+<img src="https://github.com/vitkip/tem_system/blob/main/assets/img/demo1%20(11).png"  alt="Build Status">
+<p align="center">
+<img src="https://github.com/vitkip/tem_system/blob/main/assets/img/demo1%20(12).png"  alt="Build Status">
+<p align="center">
+<img src="https://github.com/vitkip/tem_system/blob/main/assets/img/demo1%20(13).png"  alt="Build Status">
+<p align="center">
+<img src="https://github.com/vitkip/tem_system/blob/main/assets/img/demo1%20(14).png"  alt="Build Status">
+<p align="center">
+<img src="https://github.com/vitkip/tem_system/blob/main/assets/img/demo1%20(15).png"  alt="Build Status">
 
 ### 📂 ຮ່ວມສະໜັບສະໜຸນຜູ້ພັດທະນາ
 <p align="center">
