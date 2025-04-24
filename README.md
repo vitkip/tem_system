@@ -34,7 +34,7 @@ tem_system/ ├── db.php ການເຊື່ອມຕໍ່ຖານຂໍ
 
 ### 📂 ຮ່ວມສະໜັບສະໜຸນຜູ້ພັດທະນາ
 <p align="center">
-<img src="https://github.com/vitkip/tem_system/blob/main/assets/QRCODE.PNG" width="75" style="max-width: 75%; alt="Build Status">
+<img src="https://github.com/vitkip/tem_system/blob/main/assets/QRCODE.PNG" width="100" style="max-width: 100%; alt="Build Status">
 
 ---
 
