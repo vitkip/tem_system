@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $mother_name = trim($_POST['mother_name']);
     $current_temple = trim($_POST['current_temple']);
     $ordination_date = trim($_POST['ordination_date']);
-    $age_pansa = trim($_POST['age_pansa']);
+    //$age_pansa = trim($_POST['age_pansa']);
     $certificate_number = trim($_POST['certificate_number']);
     $notes = trim($_POST['notes']);
 
@@ -90,7 +90,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errors[] = "ກະລຸນາໃສ່ຮູບ .jpg .jpeg .png .gif ເທົ່ານັ້ນ.";
         }
     }
-
+// คำนวณพรรษาอัตโนมัติ
+$age_pansa = null;
+if (!empty($ordination_date)) {
+    $ordination = new DateTime($ordination_date);
+    $now = new DateTime();
+    $diff = $ordination->diff($now);
+    $age_pansa = $diff->y; // ปีที่ต่างกันคือพรรษา
+}
     // ຖ້າບໍ່ມີ error ບັນທຶກໃສ່ database
     if (empty($errors)) {
         $stmt = $pdo->prepare("
@@ -125,7 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <!-- ແບບຟອມ -->
 <div class="p-8 max-w-4xl mx-auto">
-    <h1 class="text-3xl font-bold text-center text-indigo-700 mb-8">ເພີ່ມຂໍ້ມູນພຣະ/ແມ່ຂາວ/ເນນ</h1>
+    <h1 class="text-3xl font-bold text-center text-indigo-700 mb-8">ເພີ່ມຂໍ້ມູນພຣະ|ແມ່ຂາວ|ສາມະເນນ</h1>
 
     <?php if (!empty($errors)): ?>
         <div class="bg-red-100 text-red-700 p-4 rounded mb-6">
@@ -253,6 +260,20 @@ document.getElementById('photoInput')?.addEventListener('change', function(event
     }
     if (event.target.files[0]) {
         reader.readAsDataURL(event.target.files[0]);
+    }
+});
+document.querySelector('[name="ordination_date"]').addEventListener('change', function () {
+    const ordinationDate = new Date(this.value);
+    const today = new Date();
+    let age = today.getFullYear() - ordinationDate.getFullYear();
+    const m = today.getMonth() - ordinationDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < ordinationDate.getDate())) {
+        age--;
+    }
+    if (age >= 0) {
+        document.querySelector('[name="age_pansa"]').value = age;
+    } else {
+        document.querySelector('[name="age_pansa"]').value = '';
     }
 });
 </script>

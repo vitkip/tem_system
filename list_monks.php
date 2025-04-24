@@ -135,6 +135,22 @@ $monks = $stmt->fetchAll();
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<script src="js/vfs_fonts_custom.js"></script>
+
+<style>
+.custom-swal-container {
+    z-index: 9999;
+}
+
+.custom-swal-popup {
+    border-radius: 1rem;
+    padding: 0;
+}
+
+.swal2-close:focus {
+    box-shadow: none;
+}
+</style>
 
 <script>
 pdfMake.fonts = {
@@ -149,20 +165,55 @@ pdfMake.fonts = {
 $(function() {
     var table = $('#monkTable').DataTable({
         responsive: true,
-        dom: '<"flex justify-between items-center mb-4"Bl>rt<"flex justify-between items-center mt-4"ip>',
+        dom: '<"flex flex-col md:flex-row justify-between items-center gap-4 mb-4"Bl>rt<"flex flex-col md:flex-row justify-between items-center gap-4 mt-4"ip>',
         buttons: [
             {
                 extend: 'pdfHtml5',
                 text: 'ໂຫຼດ PDF',
+                className: 'bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg',
+                orientation: 'landscape',
+                pageSize: 'A4',
                 customize: function(doc) {
-                    doc.defaultStyle = { font: 'NotoSansLao', fontSize: 14 };
+                    // ตั้งค่าฟอนต์
+                    doc.defaultStyle = {
+                        font: 'NotoSansLao',
+                        fontSize: 12
+                    };
+                    
+                    // กำหนดความกว้างคอลัมน์
+                    doc.content[1].table.widths = Array(doc.content[1].table.body[0].length).fill('*');
+                    
+                    // ตั้งค่าหัวตาราง
+                    doc.content[1].table.headerRows = 1;
+                    doc.content[1].table.body[0].forEach(function(header) {
+                        header.alignment = 'center';
+                        header.fontSize = 13;
+                        header.bold = true;
+                    });
                 },
-                exportOptions: { columns: [2, 3, 4] }
+                exportOptions: {
+                    columns: [0, 2, 3, 4, 5], // ลำดับ, ชื่อ, นามสกุล, บ้านเกิด, แขวง
+                    format: {
+                        body: function(data, row, column, node) {
+                            // ถ้าเป็นคอลัมน์รูปภาพ ให้ข้าม
+                            if (column === 1) return '';
+                            // ลบ HTML tags
+                            return data.replace(/<.*?>/g, '');
+                        }
+                    }
+                },
+                title: 'ລາຍການຂໍ້ມູນພຣະສົງ',
+                filename: 'monks_data_' + new Date().toISOString().slice(0,10)
             },
             {
                 extend: 'excelHtml5',
                 text: 'ໂຫຼດ Excel',
-                exportOptions: { columns: [2, 3, 4] }
+                className: 'bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg',
+                exportOptions: {
+                    columns: [0, 2, 3, 4, 5] // ลำดับ, ชื่อ, นามสกุล, บ้านเกิด, แขวง
+                },
+                title: 'ລາຍການຂໍ້ມູນພຣະສົງ',
+                filename: 'monks_data_' + new Date().toISOString().slice(0,10)
             }
         ],
         language: {
@@ -194,34 +245,145 @@ $(function() {
 
 function viewProfile(name, temple, prefix, firstName, lastName, birthDate, nationality, ethnicity, birthplaceVillage, birthplaceDistrict, birthplaceProvince, fatherName, motherName, ordinationDate, agePansa, certificateNumber, photoUrl) {
     Swal.fire({
-        title: name,
         html: `
-            <div class="flex flex-col items-center space-y-4">
-                ${photoUrl ? `<img src="${photoUrl}" class="w-32 h-32 rounded-full object-cover border" alt="Photo">` 
-                            : `<div class="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center text-gray-400">-</div>`}
-                <div class="text-left space-y-2">
-                    <div><span class="font-semibold text-gray-600">ປະເພດ:</span> ${prefix}</div>
-                    <div><span class="font-semibold text-gray-600">ຊື່:</span> ${firstName} ${lastName}</div>
-                    <div><span class="font-semibold text-gray-600">ວັນເກີດ:</span> ${birthDate}</div>
-                    <div><span class="font-semibold text-gray-600">ສັນຊາດ:</span> ${nationality}</div>
-                    <div><span class="font-semibold text-gray-600">ຊົນເຜົ່າ:</span> ${ethnicity}</div>
-                    <div><span class="font-semibold text-gray-600">ວັດປະຈຸບັນ:</span> ${temple}</div>
-                    <div><span class="font-semibold text-gray-600">ບ້ານເກີດ:</span> ${birthplaceVillage}, ເມືອງ ${birthplaceDistrict}, ແຂວງ ${birthplaceProvince}</div>
-                    <div><span class="font-semibold text-gray-600">ຊື່ພໍ່:</span> ${fatherName}</div>
-                    <div><span class="font-semibold text-gray-600">ຊື່ແມ່:</span> ${motherName}</div>
-                    <div><span class="font-semibold text-gray-600">ວັນບວດ:</span> ${ordinationDate}</div>
-                    <div><span class="font-semibold text-gray-600">ພັນສາ:</span> ${agePansa} ພັນສາ</div>
-                    <div><span class="font-semibold text-gray-600">ເລກໃບສຸດທິ:</span> ${certificateNumber}</div>
+            <div class="min-w-[600px]">
+                <!-- Header with Gradient -->
+                <div class="bg-gradient-to-r from-indigo-600 to-purple-600 -mt-8 -mx-8 p-8 mb-6">
+                    <div class="flex flex-col items-center">
+                        <!-- Profile Image -->
+                        <div class="relative">
+                            ${photoUrl 
+                                ? `<img src="${photoUrl}" class="h-32 w-32 rounded-full object-cover border-4 border-white shadow-lg" alt="${name}">` 
+                                : `<div class="h-32 w-32 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border-4 border-white">
+                                    <i class="fas fa-user-circle text-white text-5xl"></i>
+                                   </div>`
+                            }
+                        </div>
+                        <h2 class="mt-4 text-2xl font-bold text-white">${name}</h2>
+                        <p class="text-indigo-100 mt-1">${temple}</p>
+                    </div>
+                </div>
+
+                <!-- Content Grid -->
+                <div class="grid grid-cols-2 gap-6 px-2">
+                    <!-- Personal Information -->
+                    <div class="bg-gray-50 rounded-xl p-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                            <i class="fas fa-user-circle text-indigo-600 mr-2"></i>
+                            ຂໍ້ມູນສ່ວນຕົວ
+                        </h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center text-gray-600">
+                                <i class="fas fa-id-card w-6 text-indigo-500"></i>
+                                <span class="font-medium mr-2">ປະເພດ:</span> ${prefix}
+                            </div>
+                            <div class="flex items-center text-gray-600">
+                                <i class="fas fa-calendar-day w-6 text-indigo-500"></i>
+                                <span class="font-medium mr-2">ວັນເກີດ:</span> ${birthDate}
+                            </div>
+                            <div class="flex items-center text-gray-600">
+                                <i class="fas fa-flag w-6 text-indigo-500"></i>
+                                <span class="font-medium mr-2">ສັນຊາດ:</span> ${nationality}
+                            </div>
+                            <div class="flex items-center text-gray-600">
+                                <i class="fas fa-users w-6 text-indigo-500"></i>
+                                <span class="font-medium mr-2">ຊົນເຜົ່າ:</span> ${ethnicity}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Birth Place Information -->
+                    <div class="bg-gray-50 rounded-xl p-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                            <i class="fas fa-map-marked-alt text-indigo-600 mr-2"></i>
+                            ບ່ອນເກີດ
+                        </h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center text-gray-600">
+                                <i class="fas fa-home w-6 text-indigo-500"></i>
+                                <span class="font-medium mr-2">ບ້ານ:</span> ${birthplaceVillage}
+                            </div>
+                            <div class="flex items-center text-gray-600">
+                                <i class="fas fa-city w-6 text-indigo-500"></i>
+                                <span class="font-medium mr-2">ເມືອງ:</span> ${birthplaceDistrict}
+                            </div>
+                            <div class="flex items-center text-gray-600">
+                                <i class="fas fa-map w-6 text-indigo-500"></i>
+                                <span class="font-medium mr-2">ແຂວງ:</span> ${birthplaceProvince}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Family Information -->
+                    <div class="bg-gray-50 rounded-xl p-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                            <i class="fas fa-users text-indigo-600 mr-2"></i>
+                            ຂໍ້ມູນຄອບຄົວ
+                        </h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center text-gray-600">
+                                <i class="fas fa-male w-6 text-indigo-500"></i>
+                                <span class="font-medium mr-2">ຊື່ພໍ່:</span> ${fatherName}
+                            </div>
+                            <div class="flex items-center text-gray-600">
+                                <i class="fas fa-female w-6 text-indigo-500"></i>
+                                <span class="font-medium mr-2">ຊື່ແມ່:</span> ${motherName}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ordination Information -->
+                    <div class="bg-gray-50 rounded-xl p-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                            <i class="fas fa-pray text-indigo-600 mr-2"></i>
+                            ຂໍ້ມູນການບວດ
+                        </h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center text-gray-600">
+                                <i class="fas fa-calendar-alt w-6 text-indigo-500"></i>
+                                <span class="font-medium mr-2">ວັນບວດ:</span> ${ordinationDate}
+                            </div>
+                            <div class="flex items-center text-gray-600">
+                                <i class="fas fa-history w-6 text-indigo-500"></i>
+                                <span class="font-medium mr-2">ພັນສາ:</span> ${calculatePansa(ordinationDate)} ພັນສາ
+                            </div>
+                            <div class="flex items-center text-gray-600">
+                                <i class="fas fa-id-card-alt w-6 text-indigo-500"></i>
+                                <span class="font-medium mr-2">ເລກໃບສຸດທິ:</span> ${certificateNumber}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         `,
         showCloseButton: true,
         showConfirmButton: false,
-        width: '400px',
+        width: '800px',
         padding: '2em',
         background: '#fff',
-        backdrop: `rgba(0,0,0,0.4) left top no-repeat`
+        customClass: {
+            container: 'custom-swal-container',
+            popup: 'custom-swal-popup'
+        }
     });
+}
+
+function calculatePansa(ordinationDate) {
+    if (!ordinationDate) return 0;
+
+    const ordDate = new Date(ordinationDate);
+    const now = new Date();
+
+    let pansa = now.getFullYear() - ordDate.getFullYear();
+
+    // ถ้ายังไม่ถึงวันครบรอบบวชในปีนี้ ให้ลบออก 1
+    const notYetAnniversary = (
+        now.getMonth() < ordDate.getMonth() ||
+        (now.getMonth() === ordDate.getMonth() && now.getDate() < ordDate.getDate())
+    );
+    if (notYetAnniversary) pansa--;
+
+    return Math.max(0, pansa); // ไม่ให้ติดลบ
 }
 
 function confirmDelete(id) {

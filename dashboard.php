@@ -2,6 +2,13 @@
 require 'db.php';
 include 'header.php';
 
+// รวมจำนวนพระ / แม่ชี / สามเณร / สังฆะลี
+$countMonk = $pdo->query("SELECT COUNT(*) FROM monks WHERE prefix = 'ພຣະ'")->fetchColumn();
+$countNun = $pdo->query("SELECT COUNT(*) FROM monks WHERE prefix = 'ຄຸນແມ່ຂາວ'")->fetchColumn();
+$countNovice = $pdo->query("SELECT COUNT(*) FROM monks WHERE prefix = 'ສ.ນ'")->fetchColumn();
+//$countSangkhali = $pdo->query("SELECT COUNT(*) FROM monks WHERE prefix = 'ສັງກະລີ'")->fetchColumn();
+$total_monk_all = $countMonk + $countNun + $countNovice;
+
 // SQL
 $stmt = $pdo->query("
      SELECT m.id, CONCAT(m.prefix, ' ', m.first_name, ' ', m.last_name) AS monk_name, COUNT(em.event_id) AS event_count
@@ -68,6 +75,8 @@ $stmt = $pdo->prepare("SELECT * FROM events WHERE event_date BETWEEN CURDATE() A
 $stmt->execute();
 $upcoming_events = $stmt->fetchAll();
 
+
+
 // ดึงสรุปข้อมูล
 $countMonk = $pdo->query("SELECT COUNT(*) FROM monks WHERE prefix = 'ພຣະ'")->fetchColumn();
 $countNun = $pdo->query("SELECT COUNT(*) FROM monks WHERE prefix = 'ຄຸນແມ່ຂາວ'")->fetchColumn();
@@ -82,7 +91,7 @@ $countSangkhali = $pdo->query("SELECT COUNT(*) FROM monks WHERE prefix = 'ສັ
         <h1 class="text-2xl font-bold text-indigo-700">ໜ້າສະຫຼຸບລາຍງານ|ແດງກຣາບ|ງານກິດນິມນ|ແຈ້ງເຕືອນ|</h1>
         <?php if (isAdmin()): ?>
         <a href="add_monk.php" class="inline-flex items-center bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
-            ➕ ເພີ່ມພຣະ
+            ➕ ເພີ່ມ
         </a>
         <?php endif; ?>
     </div>
@@ -119,9 +128,10 @@ $countSangkhali = $pdo->query("SELECT COUNT(*) FROM monks WHERE prefix = 'ສັ
         <div class="bg-pink-100 p-6 rounded-lg shadow hover:scale-105 transform transition">
             <div class="flex items-center space-x-4">
                 <i class="fas fa-users fa-2x text-pink-700"></i>
+                
                 <div>
-                    <p class="text-2xl font-bold"><?= $countSangkhali ?></p>
-                    <p class="text-gray-600">ສັງກະລີ</p>
+                    <p class="text-2xl font-bold"><?= $total_monk_all ?></p>
+                    <p class="text-gray-600">ຈໍານວນພຣະ|ແມ່ຂາວ|ສາມະເນນ</p>
                 </div>
             </div>
         </div>

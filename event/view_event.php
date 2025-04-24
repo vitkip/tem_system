@@ -21,41 +21,94 @@ $stmt = $pdo->prepare("SELECT m.prefix, m.first_name, m.last_name
                        WHERE em.event_id = ?");
 $stmt->execute([$event_id]);
 $monks = $stmt->fetchAll();
+
+// Add Font Awesome for icons
+echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">';
 ?>
 
-<div class="max-w-5xl mx-auto bg-white p-8 rounded-lg shadow mt-10">
-    <h1 class="text-3xl font-bold text-indigo-700 text-center mb-8"><?= htmlspecialchars($event['event_name']) ?></h1>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-700">
-        <div>
-            <p><strong>ວັນທີ:</strong> <?= htmlspecialchars($event['event_date']) ?></p>
-            <p><strong>ເວລາ:</strong> <?= htmlspecialchars($event['event_time']) ?></p>
-            <p><strong>ສະຖານທີ່:</strong> <?= htmlspecialchars($event['location']) ?></p>
+<div class="max-w-5xl mx-auto px-4 py-8">
+    <!-- Event Card -->
+    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+        <!-- Header Section with Gradient -->
+        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-8 text-white">
+            <h1 class="text-3xl font-bold text-center mb-4">
+                <?= htmlspecialchars($event['event_name']) ?>
+            </h1>
         </div>
-    </div>
 
-    <div class="mt-8">
-        <h2 class="text-2xl font-bold mb-4 text-indigo-600">ລາຍຊື່ພຣະສົງທີ່ໄປຮ່ວມ:</h2>
+        <!-- Event Details -->
+        <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Left Column: Event Info -->
+                <div class="space-y-4">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">ລາຍລະອຽດງານ</h2>
+                    
+                    <div class="flex items-center space-x-3 text-gray-700">
+                        <i class="fas fa-calendar-alt text-indigo-600"></i>
+                        <span><strong>ວັນທີ:</strong> <?= date('d/m/Y', strtotime($event['event_date'])) ?></span>
+                    </div>
 
-        <?php if (count($monks) > 0): ?>
-            <ul class="list-disc pl-6 space-y-2">
-                <?php foreach ($monks as $monk): ?>
-                    <li><?= htmlspecialchars($monk['prefix'] . ' ' . $monk['first_name'] . ' ' . $monk['last_name']) ?></li>
-                <?php endforeach; ?>
-            </ul>
-        <?php else: ?>
-            <p class="text-gray-500">- ບໍ່ມີການເພີ່ມພຣະສົງເຂົ້າຮ່ວມ -</p>
-        <?php endif; ?>
-    </div>
+                    <div class="flex items-center space-x-3 text-gray-700">
+                        <i class="fas fa-clock text-indigo-600"></i>
+                        <span><strong>ເວລາ:</strong> <?= htmlspecialchars($event['event_time']) ?></span>
+                    </div>
 
-    <div class="text-center mt-10">
-        <?php if (isAdmin()): ?>
-        <a href="assign_monks.php?event_id=<?= $event_id ?>" class="bg-yellow-500 text-white px-6 py-2 rounded hover:bg-yellow-600">
-            ➕ ເລືອກພຣະສົງເຂົ້າຮ່ວມ
-        </a>
-        <?php endif; ?>
+                    <div class="flex items-center space-x-3 text-gray-700">
+                        <i class="fas fa-map-marker-alt text-indigo-600"></i>
+                        <span><strong>ສະຖານທີ່:</strong> <?= htmlspecialchars($event['location']) ?></span>
+                    </div>
+                </div>
 
-        <a href="list_events.php" class="ml-4 text-indigo-600 underline">← ກັບໄປລາຍການ</a>
+                <!-- Right Column: Monks List -->
+                <div class="bg-gray-50 rounded-lg p-6">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                        <i class="fas fa-users text-indigo-600 mr-2"></i>
+                        ລາຍຊື່ພຣະສົງທີ່ໄປຮ່ວມ
+                    </h2>
+
+                    <?php if (count($monks) > 0): ?>
+                        <div class="space-y-3">
+                            <?php foreach ($monks as $monk): ?>
+                                <div class="flex items-center space-x-3 p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                                    <div class="flex-shrink-0">
+                                        <i class="fas fa-user-circle text-gray-400 text-xl"></i>
+                                    </div>
+                                    <span class="text-gray-700">
+                                        <?= htmlspecialchars($monk['prefix'] . ' ' . $monk['first_name'] . ' ' . $monk['last_name']) ?>
+                                    </span>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php else: ?>
+                        <div class="text-center py-8 text-gray-500">
+                            <i class="fas fa-users-slash text-4xl mb-3"></i>
+                            <p>ບໍ່ມີການເພີ່ມພຣະສົງເຂົ້າຮ່ວມ</p>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 mt-8">
+                <?php if (isAdmin()): ?>
+                    <a href="assign_monks.php?event_id=<?= $event_id ?>" 
+                       class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 
+                              text-white rounded-lg hover:from-yellow-600 hover:to-yellow-700 
+                              transition-all duration-200 shadow-md hover:shadow-lg">
+                        <i class="fas fa-user-plus mr-2"></i>
+                        ເລືອກພຣະສົງເຂົ້າຮ່ວມ
+                    </a>
+                <?php endif; ?>
+                
+                <a href="list_events.php" 
+                   class="inline-flex items-center px-6 py-3 border-2 border-indigo-600 
+                          text-indigo-600 rounded-lg hover:bg-indigo-50 
+                          transition-all duration-200">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    ກັບໄປລາຍການ
+                </a>
+            </div>
+        </div>
     </div>
 </div>
 

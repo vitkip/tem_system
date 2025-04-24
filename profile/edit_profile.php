@@ -74,81 +74,170 @@ if (isset($_POST['change_password'])) {
 <html lang="lo">
 <head>
     <meta charset="UTF-8">
-    <title>ແກ້ໄຂຂໍ້ມູນສ່ວນໂຕ ແລະ ປ່ຽນລະຫັດຜ່ານ</title>
+    <title>ແກ້ໄຂຂໍ້ມູນສ່ວນໂຕ</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body {
             font-family: 'Noto Sans Lao', sans-serif;
         }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+<body class="min-h-screen bg-gradient-to-br from-indigo-50 to-white py-12">
 
-<div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md space-y-8">
+<div class="max-w-4xl mx-auto px-4">
+    <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+        <!-- Header with Gradient -->
+        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-8">
+            <div class="flex flex-col items-center">
+                <!-- Current Profile Image -->
+                <div class="relative group">
+                    <div class="h-32 w-32 rounded-full overflow-hidden border-4 border-white shadow-lg">
+                        <img src="../uploads/<?= htmlspecialchars($user['profile_image'] ?? 'default.png') ?>" 
+                             alt="Profile" 
+                             class="h-full w-full object-cover">
+                    </div>
+                </div>
+                <h1 class="mt-4 text-2xl font-bold text-white">ແກ້ໄຂຂໍ້ມູນສ່ວນໂຕ</h1>
+            </div>
+        </div>
 
-    <h2 class="text-2xl font-bold text-center">ແກ້ໄຂຂໍ້ມູນສ່ວນໂຕ</h2>
+        <!-- Content Section -->
+        <div class="p-6 md:p-8">
+            <?php if ($error): ?>
+                <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-lg">
+                    <div class="flex items-center">
+                        <i class="fas fa-exclamation-circle mr-2"></i>
+                        <?= htmlspecialchars($error) ?>
+                    </div>
+                </div>
+            <?php endif; ?>
 
-    <?php if ($error): ?>
-        <div class="bg-red-100 text-red-700 p-3 rounded"><?= htmlspecialchars($error) ?></div>
-    <?php endif; ?>
+            <?php if ($success): ?>
+                <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded-lg">
+                    <div class="flex items-center">
+                        <i class="fas fa-check-circle mr-2"></i>
+                        <?= htmlspecialchars($success) ?>
+                    </div>
+                </div>
+            <?php endif; ?>
 
-    <?php if ($success): ?>
-        <div class="bg-green-100 text-green-700 p-3 rounded"><?= htmlspecialchars($success) ?></div>
-    <?php endif; ?>
+            <!-- Profile Update Form -->
+            <div class="bg-gray-50 rounded-xl p-6 mb-8">
+                <h2 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
+                    <i class="fas fa-user-circle mr-2 text-indigo-600"></i>
+                    ຂໍ້ມູນໂປຣໄຟລ໌
+                </h2>
 
-    <!-- ແສດງຮູບໂປຣໄຟລ໌ -->
-    <div class="flex justify-center">
-        <img src="../uploads/<?= htmlspecialchars($user['profile_image'] ?? 'default.png') ?>" alt="ຮູບໂປຣໄຟລ໌" class="h-24 w-24 rounded-full mb-4">
+                <form method="POST" enctype="multipart/form-data" class="space-y-6">
+                    <input type="hidden" name="update_profile" value="1">
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-gray-700 mb-2">
+                                <i class="fas fa-user mr-2 text-indigo-500"></i>
+                                ຊື່ຜູ້ໃຊ້
+                            </label>
+                            <input type="text" 
+                                   name="username" 
+                                   value="<?= htmlspecialchars($_SESSION['username'] ?? '') ?>" 
+                                   required 
+                                   class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                        </div>
+
+                        <div>
+                            <label class="block text-gray-700 mb-2">
+                                <i class="fas fa-camera mr-2 text-indigo-500"></i>
+                                ເລືອກຮູບໂປຣໄຟລ໌ໃໝ່
+                            </label>
+                            <input type="file" 
+                                   name="profile_image" 
+                                   accept="image/*" 
+                                   class="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white">
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end">
+                        <button type="submit" 
+                                class="inline-flex items-center px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 
+                                       transition-all duration-200 shadow-md hover:shadow-lg">
+                            <i class="fas fa-save mr-2"></i>
+                            ບັນທຶກຂໍ້ມູນ
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Password Change Form -->
+            <div class="bg-gray-50 rounded-xl p-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
+                    <i class="fas fa-key mr-2 text-indigo-600"></i>
+                    ປ່ຽນລະຫັດຜ່ານ
+                </h2>
+
+                <form method="POST" class="space-y-6">
+                    <input type="hidden" name="change_password" value="1">
+
+                    <div class="grid grid-cols-1 gap-6">
+                        <div>
+                            <label class="block text-gray-700 mb-2">
+                                <i class="fas fa-lock mr-2 text-indigo-500"></i>
+                                ລະຫັດຜ່ານປະຈຸບັນ
+                            </label>
+                            <input type="password" 
+                                   name="current_password" 
+                                   required 
+                                   class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-gray-700 mb-2">
+                                    <i class="fas fa-key mr-2 text-indigo-500"></i>
+                                    ລະຫັດຜ່ານໃໝ່
+                                </label>
+                                <input type="password" 
+                                       name="new_password" 
+                                       required 
+                                       class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                            </div>
+
+                            <div>
+                                <label class="block text-gray-700 mb-2">
+                                    <i class="fas fa-check-circle mr-2 text-indigo-500"></i>
+                                    ຢືນຢັນລະຫັດຜ່ານໃໝ່
+                                </label>
+                                <input type="password" 
+                                       name="confirm_password" 
+                                       required 
+                                       class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end">
+                        <button type="submit" 
+                                class="inline-flex items-center px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 
+                                       transition-all duration-200 shadow-md hover:shadow-lg">
+                            <i class="fas fa-key mr-2"></i>
+                            ປ່ຽນລະຫັດຜ່ານ
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Back Button -->
+            <div class="mt-8 flex justify-center">
+                <a href="../profile/profile.php" 
+                   class="inline-flex items-center px-6 py-3 border-2 border-indigo-600 text-indigo-600 rounded-lg 
+                          hover:bg-indigo-50 transition-all duration-200">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    ກັບໄປໂປຣໄຟລ໌
+                </a>
+            </div>
+        </div>
     </div>
-
-    <!-- ຟອມແກ້ໄຂຊື່ + ອັບໂຫລດຮູບ -->
-    <form method="POST" enctype="multipart/form-data">
-        <input type="hidden" name="update_profile" value="1">
-
-        <div class="mb-4">
-            <label class="block text-gray-600">ຊື່ຜູ້ໃຊ້</label>
-            <input type="text" name="username" value="<?= htmlspecialchars($_SESSION['username'] ?? '') ?>" required class="w-full border rounded px-3 py-2">
-        </div>
-
-        <div class="mb-6">
-            <label class="block text-gray-600">ເລືອກຮູບໂປຣໄຟລ໌ໃໝ່</label>
-            <input type="file" name="profile_image" accept="image/*" class="w-full border rounded px-3 py-2 bg-white">
-        </div>
-
-        <button type="submit" class="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700">ບັນທຶກຂໍ້ມູນສ່ວນໂຕ</button>
-    </form>
-
-    <hr class="my-6">
-
-    <h2 class="text-2xl font-bold text-center">ປ່ຽນລະຫັດຜ່ານ</h2>
-
-    <!-- ຟອມປ່ຽນລະຫັດ -->
-    <form method="POST">
-        <input type="hidden" name="change_password" value="1">
-
-        <div class="mb-4">
-            <label class="block text-gray-600">ລະຫັດຜ່ານປະຈຸບັນ</label>
-            <input type="password" name="current_password" required class="w-full border rounded px-3 py-2">
-        </div>
-
-        <div class="mb-4">
-            <label class="block text-gray-600">ລະຫັດຜ່ານໃໝ່</label>
-            <input type="password" name="new_password" required class="w-full border rounded px-3 py-2">
-        </div>
-
-        <div class="mb-6">
-            <label class="block text-gray-600">ຢືນຢັນລະຫັດຜ່ານໃໝ່</label>
-            <input type="password" name="confirm_password" required class="w-full border rounded px-3 py-2">
-        </div>
-
-        <button type="submit" class="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600">ປ່ຽນລະຫັດຜ່ານ</button>
-    </form>
-
-    <div class="text-center mt-4">
-        <a href="../profile/profile.php" class="text-blue-500 underline">ກັບໄປໂປຣໄຟລ໌</a>
-    </div>
-
 </div>
 
 </body>

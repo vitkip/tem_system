@@ -77,6 +77,7 @@ $events = $pdo->query("SELECT * FROM events ORDER BY event_date DESC")->fetchAll
 </div>
 
 <script>
+    
 $(document).ready(function() {
     $('#eventsTable').DataTable({
         responsive: true,
