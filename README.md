@@ -60,3 +60,7 @@ SweetAlert2 | ປ໋ອບອັບແຈ້ງເຕືອນ
 FullCalendar.js | ປະຕິທິນງານກິດ
 pdfMake + JSZip | ສົ່ງອອກ PDF/Excel
 
+ 📂 ຮ່ວມສະໜັບສະໜຸນຜູ້ພັດທະນາ
+<p align="center">
+<img src="https://github.com/vitkip/tem_system/blob/main/uploads/68063716a4ef8_von.png" width="50" style="max-width: 50%; alt="Build Status">
+

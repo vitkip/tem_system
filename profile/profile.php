@@ -22,13 +22,15 @@ $role = $_SESSION['role'];
 <head>
     <meta charset="UTF-8">
     <title>ໂປຣໄຟລ໌ຂອງຂ້ອຍ</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao+Looped:wght@100..900&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Noto Sans Lao', sans-serif;
+            font-family: 'Noto Sans Lao Looped', sans-serif;
+            font-size: 16px;
         }
     </style>
-    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 min-h-screen flex items-center justify-center">
 

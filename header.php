@@ -22,39 +22,13 @@ function isAdmin() {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ລະບົບຈັດການຂໍ້ມູນພຣະສົງ</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="/tem_system/assets/favicons.ico">
+    <link rel="stylesheet" href="./css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao+Looped:wght@100..900&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Noto Sans Lao', sans-serif;
-        }
-        .mobile-menu-active {
-            transform: translateX(0);
-            opacity: 1;
-            visibility: visible;
-        }
-        @media (max-width: 768px) {
-            #mobileMenu {
-                transform: translateX(-100%);
-                transition: all 0.3s ease-in-out;
-                opacity: 0;
-                visibility: hidden;
-            }
-        }
-     .custom-swal-container {
-            z-index: 9999;
-        }
-
-        .custom-swal-popup {
-            border-radius: 1rem;
-            padding: 0;
-        }
-
-        .swal2-close:focus {
-            box-shadow: none;
-        }
-
-        .swal2-popup {
-            font-family: 'Noto Sans Lao', sans-serif;
+            font-family: 'Noto Sans Lao Looped', sans-serif;
+            font-size: 16px;
         }
     </style>
 </head>

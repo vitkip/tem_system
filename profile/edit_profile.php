@@ -76,13 +76,16 @@ if (isset($_POST['change_password'])) {
     <meta charset="UTF-8">
     <title>ແກ້ໄຂຂໍ້ມູນສ່ວນໂຕ</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao+Looped:wght@100..900&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Noto Sans Lao', sans-serif;
+            font-family: 'Noto Sans Lao Looped', sans-serif;
+            font-size: 16px;
         }
     </style>
+
 </head>
 <body class="min-h-screen bg-gradient-to-br from-indigo-50 to-white py-12">
 
