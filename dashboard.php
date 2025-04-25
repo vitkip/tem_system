@@ -2,6 +2,7 @@
 require 'db.php';
 include 'header.php';
 
+
 // รวมจำนวนพระ / แม่ชี / สามเณร / สังฆะลี
 $countMonk = $pdo->query("SELECT COUNT(*) FROM monks WHERE prefix = 'ພຣະ'")->fetchColumn();
 $countNun = $pdo->query("SELECT COUNT(*) FROM monks WHERE prefix = 'ຄຸນແມ່ຂາວ'")->fetchColumn();

@@ -1,19 +1,13 @@
 <?php
 session_start();
 require 'db.php';
-include 'header.php';
+require 'functions.php';
 
-// ✅ เช็กสิทธิ์
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
-    die('<div class="text-center text-red-600 mt-10 text-xl font-bold">ເຂົ້າໃຊ້ໄດ້ສຳລັບ Admin ເທົ່ານັ້ນ!</div>');
-}
+// ตรวจสอบสิทธิ์ก่อนทำการลบ
+checkPermission();
+checkAdminPermission();
 
-
-if (!isset($_SESSION['user_id'])) {
-    header('Location: register/login.php');
-    exit();
-}
-
+// ตรวจสอบ ID
 if (!isset($_GET['id'])) {
     header('Location: list_monks.php');
     exit();
@@ -21,23 +15,38 @@ if (!isset($_GET['id'])) {
 
 $id = $_GET['id'];
 
-// ດຶງຊື່ໄຟລ໌ຮູບຖ່າຍເພື່ອຈະລົບໄຟລ໌ໃນ server ດ້ວຍ
-$stmt = $pdo->prepare("SELECT photo FROM monks WHERE id = ?");
-$stmt->execute([$id]);
-$monk = $stmt->fetch();
+try {
+    // ดึงข้อมูลรูปภาพ
+    $stmt = $pdo->prepare("SELECT photo FROM monks WHERE id = ?");
+    $stmt->execute([$id]);
+    $monk = $stmt->fetch();
 
-if ($monk && !empty($monk['photo'])) {
-    $photoPath = "uploads/" . $monk['photo'];
-    if (file_exists($photoPath)) {
-        unlink($photoPath); // ລົບໄຟລ໌ຮູບອອກ
+    // ลบไฟล์รูปภาพ
+    if ($monk && !empty($monk['photo'])) {
+        $photoPath = "uploads/" . $monk['photo'];
+        if (file_exists($photoPath)) {
+            unlink($photoPath);
+        }
     }
+
+    // ลบข้อมูลจากฐานข้อมูล
+    $stmt = $pdo->prepare("DELETE FROM monks WHERE id = ?");
+    $stmt->execute([$id]);
+
+    // Redirect กลับไปหน้า list
+    header('Location: list_monks.php?deleted=success');
+    exit();
+    
+} catch (PDOException $e) {
+    // บันทึก error log
+    error_log("Delete monk error: " . $e->getMessage());
+    
+    // ย้ายการ include header มาที่นี่หลังจากการ redirect ไม่สำเร็จ
+    include 'header.php';
+    echo '<div class="container mx-auto px-4 py-8">';
+    echo '<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">';
+    echo 'ເກີດຂໍ້ຜິດພາດໃນການລົບຂໍ້ມູນ. ກະລຸນາລອງໃໝ່ອີກຄັ້ງ.';
+    echo '</div>';
+    echo '</div>';
 }
-
-// ລົບຂໍ້ມູນໃນຖານຂໍ້ມູນ
-$stmt = $pdo->prepare("DELETE FROM monks WHERE id = ?");
-$stmt->execute([$id]);
-
-// ຫຼັງຈາກລົບແລ້ວ ➔ redirect ກັບໄປໜ້າ list ພ້ອມສົ່ງຂໍ້ຄວາມ deleted=success
-header('Location: list_monks.php?deleted=success');
-exit();
 ?>

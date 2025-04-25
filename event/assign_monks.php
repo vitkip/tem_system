@@ -3,11 +3,9 @@ require '../db.php';
 include '../header.php';
 
 // เช็กสิทธิ์
-if (!isAdmin()) {
-    echo "<div class='text-center text-red-500 p-10 text-2xl font-bold'>ເຂົ້າໃຊ້ໄດ້ສໍາລັບແອັດມິນເທົ່ານັ້ນ</div>";
-    include '../footer.php';
-    exit;
-}
+// ตรวจสอบสิทธิ์ก่อนทำการลบ
+checkPermission();
+checkAdminPermission();
 
 // รับ event id
 if (!isset($_GET['event_id'])) {

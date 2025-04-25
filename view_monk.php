@@ -97,6 +97,11 @@ if (!$monk) {
                                 <span class="text-gray-600">ເລກໃບສຸດທິ:</span>
                                 <span class="font-medium"><?= htmlspecialchars($monk['certificate_number']) ?></span>
                             </div>
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-id-card text-indigo-500 w-5"></i>
+                                <span class="text-gray-600">ສະຖານະ:</span>
+                                <span class="font-medium"><?= htmlspecialchars($monk['status']) ?></span>
+                            </div>
                         </div>
                     </div>
                 </div>

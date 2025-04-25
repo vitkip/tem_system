@@ -1,8 +1,14 @@
 <?php
+// filepath: c:\xampp\htdocs\tem_system\list_monks.php
+session_start();
 require 'db.php';
-include 'header.php';
+require 'functions.php';  // require functions.php ก่อน header.php
+include 'header.php';     // include header.php หลังจาก functions.php
 
-// Fetch monks data
+// checkPermission();
+// checkAdminPermission();
+
+// ดึงข้อมูลพระ (ลบการดึงข้อมูลซ้ำออก ให้เหลือแค่ครั้งเดียว)
 $stmt = $pdo->query("SELECT * FROM monks ORDER BY id DESC");
 $monks = $stmt->fetchAll();
 ?>
@@ -54,6 +60,7 @@ $monks = $stmt->fetchAll();
                         <th>ນາມສະກຸນ</th>
                         <th>ບ້ານເກີດ</th>
                         <th>ແຂວງເກີດ</th>
+                        <th class="text-center">ສະຖານະ</th>
                         <th class="text-center">ຈັດການ</th>
                     </tr>
                 </thead>
@@ -73,7 +80,31 @@ $monks = $stmt->fetchAll();
                         <td><?= htmlspecialchars($monk['last_name']) ?></td>
                         <td><?= htmlspecialchars($monk['birthplace_village']) ?></td>
                         <td><?= htmlspecialchars($monk['birthplace_province']) ?></td>
-                        
+                        <td>
+    <?php if (isAdmin()): ?>
+        <button onclick="toggleStatus(<?= $monk['id'] ?>, '<?= $monk['status'] ?>', this)" 
+                class="w-full text-left">
+            <span class="px-2 py-1 <?= $monk['status'] === 'active' 
+                ? 'bg-green-100 text-green-800 hover:bg-green-200' 
+                : 'bg-gray-100 text-gray-800 hover:bg-gray-200' ?> 
+                rounded-full text-sm inline-flex items-center cursor-pointer transition-all">
+                <span class="w-2 h-2 <?= $monk['status'] === 'active' 
+                    ? 'bg-green-600' 
+                    : 'bg-gray-600' ?> rounded-full mr-2"></span>
+                <?= $monk['status'] === 'active' ? 'ຍັງບວດຢູ່' : 'ສຶກແລ້ວ' ?>
+            </span>
+        </button>
+    <?php else: ?>
+        <span class="px-2 py-1 <?= $monk['status'] === 'active' 
+            ? 'bg-green-100 text-green-800' 
+            : 'bg-gray-100 text-gray-800' ?> rounded-full text-sm inline-flex items-center">
+            <span class="w-2 h-2 <?= $monk['status'] === 'active' 
+                ? 'bg-green-600' 
+                : 'bg-gray-600' ?> rounded-full mr-2"></span>
+            <?= $monk['status'] === 'active' ? 'ຍັງບວດຢູ່' : 'ສຶກແລ້ວ' ?>
+        </span>
+    <?php endif; ?>
+</td>
                         <td class="text-center space-x-2">
                         <?php if (isAdmin()): ?>
                          <!-- View Button -->
@@ -94,6 +125,7 @@ $monks = $stmt->fetchAll();
                                 '<?= htmlspecialchars($monk['ordination_date']) ?>',
                                 '<?= htmlspecialchars($monk['age_pansa']) ?>',
                                 '<?= htmlspecialchars($monk['certificate_number']) ?>',
+                                '<?= htmlspecialchars($monk['status']) ?>',
                                 '<?= $monk['photo'] ? 'uploads/' . htmlspecialchars(basename($monk['photo'])) : '' ?>'
                             )" 
                             class="inline-flex items-center px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white text-xs font-medium rounded shadow">
@@ -110,7 +142,7 @@ $monks = $stmt->fetchAll();
                                             class="inline-flex items-center px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white text-xs font-medium rounded shadow">
                                         ລົບ
                                     </button>
-                            <?php endif; ?>
+                        <?php endif; ?>
                         </td>
                     </tr>
                     <?php endforeach; ?>
@@ -243,7 +275,7 @@ $(function() {
     });
 });
 
-function viewProfile(name, temple, prefix, firstName, lastName, birthDate, nationality, ethnicity, birthplaceVillage, birthplaceDistrict, birthplaceProvince, fatherName, motherName, ordinationDate, agePansa, certificateNumber, photoUrl) {
+function viewProfile(name, temple, prefix, firstName, lastName, birthDate, nationality, ethnicity, birthplaceVillage, birthplaceDistrict, birthplaceProvince, fatherName, motherName, ordinationDate, agePansa, certificateNumber, status, photoUrl) {
     Swal.fire({
         html: `
             <div class="min-w-[600px]">
@@ -351,6 +383,11 @@ function viewProfile(name, temple, prefix, firstName, lastName, birthDate, natio
                                 <i class="fas fa-id-card-alt w-6 text-indigo-500"></i>
                                 <span class="font-medium mr-2">ເລກໃບສຸດທິ:</span> ${certificateNumber}
                             </div>
+                            <div class="flex items-center text-gray-600">
+                                <i class="fas fa-id-card-alt w-6 text-indigo-500"></i>
+                                <span class="font-medium mr-2">ສະຖານະ:</span> ${status}
+                            </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -385,7 +422,54 @@ function calculatePansa(ordinationDate) {
 
     return Math.max(0, pansa); // ไม่ให้ติดลบ
 }
+function toggleStatus(monkId, currentStatus, button) {
+    Swal.fire({
+        title: 'ຢືນຢັນການປ່ຽນສະຖານະ',
+        text: currentStatus === 'active' ? 'ຕ້ອງການປ່ຽນເປັນສຶກແລ້ວບໍ?' : 'ຕ້ອງການປ່ຽນເປັນຍັງບວດຢູ່ບໍ?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'ຕົກລົງ',
+        cancelButtonText: 'ຍົກເລີກ'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: 'update_status.php',
+                type: 'POST',
+                data: {
+                    monk_id: monkId,
+                    current_status: currentStatus
+                },
+                success: function(response) {
+                    if (response.success) {
+                        updateStatusButton(button, response.newStatus);
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'ສຳເລັດ!',
+                            text: 'ປ່ຽນສະຖານະສຳເລັດແລ້ວ',
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+                    }
+                }
+            });
+        }
+    });
+}
 
+function updateStatusButton(button, newStatus) {
+    const span = button.querySelector('span');
+    const dot = span.querySelector('span');
+    
+    if (newStatus === 'active') {
+        span.className = 'px-2 py-1 bg-green-100 text-green-800 hover:bg-green-200 rounded-full text-sm inline-flex items-center cursor-pointer transition-all';
+        dot.className = 'w-2 h-2 bg-green-600 rounded-full mr-2';
+        span.lastChild.textContent = 'ຍັງບວດຢູ່';
+    } else {
+        span.className = 'px-2 py-1 bg-gray-100 text-gray-800 hover:bg-gray-200 rounded-full text-sm inline-flex items-center cursor-pointer transition-all';
+        dot.className = 'w-2 h-2 bg-gray-600 rounded-full mr-2';
+        span.lastChild.textContent = 'ສຶກແລ້ວ';
+    }
+}
 function confirmDelete(id) {
     Swal.fire({
         title: 'ທ່ານແນ່ໃຈບໍ?',

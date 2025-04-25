@@ -4,14 +4,8 @@ require 'db.php';
 include 'header.php';
 
 
-if (!isset($_SESSION['user_id'])) {
-    header('Location: register/login.php');
-    exit();
-}
-// ✅ เช็กสิทธิ์
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
-    die('<div class="text-center text-red-600 mt-10 text-xl font-bold">ເຂົ້າໃຊ້ໄດ້ສຳລັບ Admin ເທົ່ານັ້ນ!</div>');
-}
+checkPermission();
+checkAdminPermission();
 
 // ຕົວເລືອກປະເພດ
 $prefixOptions = [
@@ -40,6 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $ordination_date = trim($_POST['ordination_date']);
     //$age_pansa = trim($_POST['age_pansa']);
     $certificate_number = trim($_POST['certificate_number']);
+    $status = trim($_POST['status']);
     $notes = trim($_POST['notes']);
 
     // ກວດສອບຂໍ້ມູນຈໍາເປັນ
@@ -102,15 +97,15 @@ if (!empty($ordination_date)) {
     if (empty($errors)) {
         $stmt = $pdo->prepare("
             INSERT INTO monks 
-            (prefix, first_name, last_name, birth_date, nationality, ethnicity, birthplace_village, birthplace_district, birthplace_province, father_name, mother_name, current_temple, ordination_date, age_pansa, certificate_number, photo, notes)
+            (prefix, first_name, last_name, birth_date, nationality, ethnicity, birthplace_village, birthplace_district, birthplace_province, father_name, mother_name, current_temple, ordination_date, age_pansa, certificate_number, photo, status, notes)
             VALUES
-            (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ");
         $stmt->execute([
             $prefix, $first_name, $last_name, $birth_date, $nationality, $ethnicity,
             $birthplace_village, $birthplace_district, $birthplace_province,
             $father_name, $mother_name, $current_temple,
-            $ordination_date, $age_pansa, $certificate_number, $photo, $notes
+            $ordination_date, $age_pansa, $certificate_number, $photo, $status, $notes
         ]);
 
         echo "
@@ -144,14 +139,26 @@ if (!empty($ordination_date)) {
         </div>
     <?php endif; ?>
 
-    <form method="POST" enctype="multipart/form-data" class="bg-white p-8 rounded-lg shadow space-y-6">
-        <div class="flex justify-center mb-6">
-            <img id="preview-image" src="https://via.placeholder.com/150" class="h-32 w-32 rounded-full object-cover border">
-        </div>
+    <form method="POST" enctype="multipart/form-data" class="bg-white p-8 rounded-lg shadow space-y-10">
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- ຮູບ -->
+    <div class="flex justify-center">
+        <div class="flex flex-col items-center">
+            <img id="preview-image" src="https://via.placeholder.com/150" class="h-32 w-32 rounded-full object-cover border mb-3">
+            <label for="photoInput" class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded cursor-pointer hover:bg-indigo-700 transition">
+                📷 ອັບໂຫຼດຮູບ
+            </label>
+            <input type="file" name="photo" id="photoInput" class="hidden">
+
+        </div>
+    </div>
+
+    <!-- ຂໍ້ມູນສ່ວນໂຕ -->
+    <div>
+        <h2 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">📋 ຂໍ້ມູນສ່ວນໂຕ</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
-                <label class="block mb-2 text-gray-700">ປະເພດ:</label>
+                <label class="block mb-1 text-gray-700">ປະເພດ:</label>
                 <select name="prefix" required class="border border-gray-300 rounded px-3 py-2 w-full">
                     <option value="">-- ເລືອກປະເພດ --</option>
                     <?php foreach ($prefixOptions as $key => $label): ?>
@@ -161,94 +168,116 @@ if (!empty($ordination_date)) {
             </div>
 
             <div>
-                <label class="block mb-2 text-gray-700">ຊື່:</label>
-                <input type="text" name="first_name" class="w-full border rounded px-3 py-2" required>
+                <label class="block mb-1 text-gray-700">ຊື່:</label>
+                <input type="text" name="first_name" required class="w-full border rounded px-3 py-2">
             </div>
 
             <div>
-                <label class="block mb-2 text-gray-700">ນາມສະກຸນ:</label>
-                <input type="text" name="last_name" class="w-full border rounded px-3 py-2" required>
+                <label class="block mb-1 text-gray-700">ນາມສະກຸນ:</label>
+                <input type="text" name="last_name" required class="w-full border rounded px-3 py-2">
             </div>
 
             <div>
-                <label class="block mb-2 text-gray-700">ວັນເກີດ:</label>
+                <label class="block mb-1 text-gray-700">ວັນເກີດ:</label>
                 <input type="date" name="birth_date" class="w-full border rounded px-3 py-2">
             </div>
 
             <div>
-                <label class="block mb-2 text-gray-700">ສັນຊາດ:</label>
+                <label class="block mb-1 text-gray-700">ສັນຊາດ:</label>
                 <input type="text" name="nationality" class="w-full border rounded px-3 py-2">
             </div>
 
             <div>
-                <label class="block mb-2 text-gray-700">ຊົນເຜົ່າ:</label>
+                <label class="block mb-1 text-gray-700">ຊົນເຜົ່າ:</label>
                 <input type="text" name="ethnicity" class="w-full border rounded px-3 py-2">
             </div>
+        </div>
+    </div>
 
+    <!-- ສະຖານທີ່ເກີດ -->
+    <div>
+        <h2 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">🗺️ ສະຖານທີ່ເກີດ</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
-                <label class="block mb-2 text-gray-700">ບ້ານເກີດ:</label>
+                <label class="block mb-1 text-gray-700">ບ້ານເກີດ:</label>
                 <input type="text" name="birthplace_village" class="w-full border rounded px-3 py-2">
             </div>
-
             <div>
-                <label class="block mb-2 text-gray-700">ເມືອງເກີດ:</label>
+                <label class="block mb-1 text-gray-700">ເມືອງເກີດ:</label>
                 <input type="text" name="birthplace_district" class="w-full border rounded px-3 py-2">
             </div>
-
             <div>
-                <label class="block mb-2 text-gray-700">ແຂວງເກີດ:</label>
+                <label class="block mb-1 text-gray-700">ແຂວງເກີດ:</label>
                 <input type="text" name="birthplace_province" class="w-full border rounded px-3 py-2">
             </div>
+        </div>
+    </div>
 
+    <!-- ຄອບຄົວ & ວັດ -->
+    <div>
+        <h2 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">👨‍👩‍👧‍👦 ຄອບຄົວ & ວັດ</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
-                <label class="block mb-2 text-gray-700">ຊື່ພໍ່:</label>
+                <label class="block mb-1 text-gray-700">ຊື່ພໍ່:</label>
                 <input type="text" name="father_name" class="w-full border rounded px-3 py-2">
             </div>
-
             <div>
-                <label class="block mb-2 text-gray-700">ຊື່ແມ່:</label>
+                <label class="block mb-1 text-gray-700">ຊື່ແມ່:</label>
                 <input type="text" name="mother_name" class="w-full border rounded px-3 py-2">
             </div>
-
             <div>
-                <label class="block mb-2 text-gray-700">ຊື່ວັດປະຈຸບັນ:</label>
-                <input type="text" name="current_temple" class="w-full border rounded px-3 py-2" required>
+                <label class="block mb-1 text-gray-700">ຊື່ວັດປະຈຸບັນ:</label>
+                <input type="text" name="current_temple" required class="w-full border rounded px-3 py-2">
             </div>
+        </div>
+    </div>
 
+    <!-- ຂໍ້ມູນການບວດ -->
+    <div>
+        <h2 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">🛕 ຂໍ້ມູນການບວດ</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
-                <label class="block mb-2 text-gray-700">ວັນບວດ:</label>
+                <label class="block mb-1 text-gray-700">ວັນບວດ:</label>
                 <input type="date" name="ordination_date" class="w-full border rounded px-3 py-2">
             </div>
-
             <div>
-                <label class="block mb-2 text-gray-700">ຈໍານວນພັນສາ:</label>
+                <label class="block mb-1 text-gray-700">ຈໍານວນພັນສາ:</label>
                 <input type="number" name="age_pansa" class="w-full border rounded px-3 py-2">
             </div>
-
             <div>
-                <label class="block mb-2 text-gray-700">ເລກໃບສຸດທິ:</label>
+                <label class="block mb-1 text-gray-700">ເລກໃບສຸດທິ:</label>
                 <input type="text" name="certificate_number" class="w-full border rounded px-3 py-2">
             </div>
+        </div>
+    </div>
 
+    <!-- ສະຖານະ & ໝາຍເຫດ -->
+    <div>
+        <h2 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">📌 ຂໍ້ມູນອື່ນໆ</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
-                <label class="block mb-2 text-gray-700">ອັບໂຫຼດຮູບ:</label>
-                <input type="file" name="photo" id="photoInput" class="w-full border rounded px-3 py-2">
+                <label class="block mb-1 text-gray-700">ສະຖານະ:</label>
+                <select name="status" required class="w-full border rounded px-3 py-2">
+                    <option value="active">🟢 ຍັງບວດຢູ່</option>
+                    <option value="retired">⚪ ສຶກແລ້ວ</option>
+                </select>
+            </div>
+            <div class="md:col-span-2">
+                <label class="block mb-1 text-gray-700">ໝາຍເຫດເພີ່ມເຕີມ:</label>
+                <textarea name="notes" rows="4" class="w-full border rounded px-3 py-2"></textarea>
             </div>
         </div>
+    </div>
 
-        <div>
-            <label class="block mb-2 text-gray-700">ໝາຍເຫດເພີ່ມເຕີມ:</label>
-            <textarea name="notes" rows="4" class="w-full border rounded px-3 py-2"></textarea>
-        </div>
+    <!-- ປຸ່ມບັນທຶກ -->
+    <div class="text-center mt-8">
+        <button type="submit" class="bg-indigo-600 text-white px-8 py-3 rounded hover:bg-indigo-700 transition">
+            💾 ບັນທຶກຂໍ້ມູນ
+        </button>
+        <a href="list_monks.php" class="ml-4 text-indigo-600 underline">← ກັບໄປລາຍການ</a>
+    </div>
+</form>
 
-        <div class="text-center mt-8">
-            <button type="submit" class="bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700">
-                💾 ບັນທຶກຂໍ້ມູນ
-            </button>
-            <a href="list_monks.php" class="ml-4 text-indigo-600 underline">← ກັບໄປລາຍການ</a>
-        </div>
-
-    </form>
 </div>
 
 <!-- Preview image -->
