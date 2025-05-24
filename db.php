@@ -5,6 +5,9 @@ $dbname = 'monks';          // ຊື່ຖານຂໍ້ມູນຂອງເ�
 $username = 'root';         // ຊື່ຜູ້ໃຊ້ຖານຂໍ້ມູນ
 $password = '';             // ລະຫັດຜ່ານ (ຖ້າແມ່ນ XAMPP ປົກກະຕິຈະເປັນຄ່າຫວ່າງ)
 
+// ກຳນົດ BASE_URL ສຳລັບໃຊ້ໃນລະບົບ
+define('BASE_URL', 'http://localhost/tem_system/');
+
 $options = [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, // ໃຫ້ສະແດງ error ແບບ exception
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, // fetch ເປັນ array ທີ່ໃຊ້ຊື່ column

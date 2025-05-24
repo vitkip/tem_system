@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
     <div class="flex justify-center mb-6">
-        <img src="../assets/logo.png" alt="ໂລໂກ້" class="h-20 w-16 rounded-full">
+        <img src="<?= BASE_URL ?>assets/logo.png" alt="ໂລໂກ້" class="h-20 w-16 rounded-full">
     </div>
 
     <h2 class="text-2xl font-bold text-center mb-6">ລົງທະບຽນສະມາຊິກ</h2>
@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </form>
 
     <div class="text-center mt-4">
-        <a href="../register/login.php" class="text-blue-500 underline">ມີບັນຊີແລ້ວ? ເຂົ້າລະບົບ</a>
+        <a href="<?= BASE_URL ?>register/login.php" class="text-blue-500 underline">ມີບັນຊີແລ້ວ? ເຂົ້າລະບົບ</a>
     </div>
 </div>
 

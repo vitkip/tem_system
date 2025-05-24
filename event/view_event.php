@@ -91,7 +91,7 @@ echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-a
             <!-- Action Buttons -->
             <div class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 mt-8">
                 <?php if (isAdmin()): ?>
-                    <a href="assign_monks.php?event_id=<?= $event_id ?>" 
+                    <a href="<?= BASE_URL ?>event/assign_monks.php?event_id=<?= $event_id ?>" 
                        class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 
                               text-white rounded-lg hover:from-yellow-600 hover:to-yellow-700 
                               transition-all duration-200 shadow-md hover:shadow-lg">
@@ -100,7 +100,7 @@ echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-a
                     </a>
                 <?php endif; ?>
                 
-                <a href="list_events.php" 
+                <a href="<?= BASE_URL ?>event/list_events.php" 
                    class="inline-flex items-center px-6 py-3 border-2 border-indigo-600 
                           text-indigo-600 rounded-lg hover:bg-indigo-50 
                           transition-all duration-200">

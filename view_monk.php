@@ -28,7 +28,7 @@ if (!$monk) {
                     <!-- Profile Image -->
                     <div class="relative">
                         <?php if ($monk['photo']): ?>
-                            <img src="uploads/<?= htmlspecialchars($monk['photo']) ?>" 
+                            <img src="<?= BASE_URL ?>uploads/<?= htmlspecialchars($monk['photo']) ?>" 
                                  class="h-32 w-32 md:h-40 md:w-40 rounded-full object-cover border-4 border-white shadow-lg"
                                  alt="<?= htmlspecialchars($monk['first_name']) ?>">
                         <?php else: ?>
@@ -124,14 +124,14 @@ if (!$monk) {
 
                 <!-- Action Buttons -->
                 <div class="mt-8 flex flex-col sm:flex-row justify-center items-center gap-4">
-                    <a href="list_monks.php" 
+                    <a href="<?= BASE_URL ?>list_monks.php" 
                        class="inline-flex items-center px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 
                               transition-all duration-200 shadow-md hover:shadow-lg">
                         <i class="fas fa-arrow-left mr-2"></i>
                         ກັບໄປລາຍການ
                     </a>
                     <?php if (isAdmin()): ?>
-                    <a href="edit_monk.php?id=<?= $monk['id'] ?>" 
+                    <a href="<?= BASE_URL ?>edit_monk.php?id=<?= $monk['id'] ?>" 
                        class="inline-flex items-center px-6 py-3 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 
                               transition-all duration-200 shadow-md hover:shadow-lg">
                         <i class="fas fa-edit mr-2"></i>

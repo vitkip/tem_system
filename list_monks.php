@@ -28,7 +28,7 @@ $monks = $stmt->fetchAll();
                         <option value="ພຣະ">ພຣະ</option>
                         <option value="ຄຸນແມ່ຂາວ">ຄຸນແມ່ຂາວ</option>
                         <option value="ສ.ນ">ສ.ນ</option>
-                        <option value="ສັງກະລີ">ສັງກະລີ</option>
+                        <option value="ສັງກະລີ">ສັງກະລี</option>
                     </select>
                 </div>
 
@@ -41,7 +41,7 @@ $monks = $stmt->fetchAll();
                 <!-- Add Button -->
                 <?php if (isAdmin()): ?>
                 <div class="flex items-end">
-                    <a href="add_monk.php" class="inline-flex items-center px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-md shadow">
+                    <a href="<?= BASE_URL ?>add_monk.php" class="inline-flex items-center px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-md shadow">
                         ➕ ເພີ່ມຂໍ້ມູນ
                     </a>
                 </div>
@@ -71,7 +71,7 @@ $monks = $stmt->fetchAll();
                         <td class="text-center"><?= $index + 1 ?></td>
                         <td class="text-center">
                             <?php if (!empty($monk['photo'])): ?>
-                                <img src="uploads/<?= htmlspecialchars(basename($monk['photo'])) ?>" class="h-12 w-12 rounded-full object-cover border" alt="monk photo" />
+                                <img src="<?= BASE_URL ?>uploads/<?= htmlspecialchars(basename($monk['photo'])) ?>" class="h-12 w-12 rounded-full object-cover border" alt="monk photo" />
                             <?php else: ?>
                                 <div class="h-12 w-12 rounded-full bg-gray-200 flex items-center justify-center text-gray-400">-</div>
                             <?php endif; ?>
@@ -82,26 +82,26 @@ $monks = $stmt->fetchAll();
                         <td><?= htmlspecialchars($monk['birthplace_province']) ?></td>
                         <td>
     <?php if (isAdmin()): ?>
-        <button onclick="toggleStatus(<?= $monk['id'] ?>, '<?= $monk['status'] ?>', this)" 
+        <button onclick="toggleStatus(<?= $monk['id'] ?>, '<?= $monk['status'] ?? 'active' ?>', this)" 
                 class="w-full text-left">
-            <span class="px-2 py-1 <?= $monk['status'] === 'active' 
+            <span class="px-2 py-1 <?= ($monk['status'] ?? 'active') === 'active' 
                 ? 'bg-green-100 text-green-800 hover:bg-green-200' 
                 : 'bg-gray-100 text-gray-800 hover:bg-gray-200' ?> 
                 rounded-full text-sm inline-flex items-center cursor-pointer transition-all">
-                <span class="w-2 h-2 <?= $monk['status'] === 'active' 
+                <span class="w-2 h-2 <?= ($monk['status'] ?? 'active') === 'active' 
                     ? 'bg-green-600' 
                     : 'bg-gray-600' ?> rounded-full mr-2"></span>
-                <?= $monk['status'] === 'active' ? 'ຍັງບວດຢູ່' : 'ສຶກແລ້ວ' ?>
+                <?= ($monk['status'] ?? 'active') === 'active' ? 'ຍັງບວດຢູ່' : 'ສຶກແລ້ວ' ?>
             </span>
         </button>
     <?php else: ?>
-        <span class="px-2 py-1 <?= $monk['status'] === 'active' 
+        <span class="px-2 py-1 <?= ($monk['status'] ?? 'active') === 'active' 
             ? 'bg-green-100 text-green-800' 
             : 'bg-gray-100 text-gray-800' ?> rounded-full text-sm inline-flex items-center">
-            <span class="w-2 h-2 <?= $monk['status'] === 'active' 
+            <span class="w-2 h-2 <?= ($monk['status'] ?? 'active') === 'active' 
                 ? 'bg-green-600' 
                 : 'bg-gray-600' ?> rounded-full mr-2"></span>
-            <?= $monk['status'] === 'active' ? 'ຍັງບວດຢູ່' : 'ສຶກແລ້ວ' ?>
+            <?= ($monk['status'] ?? 'active') === 'active' ? 'ຍັງບວດຢູ່' : 'ສຶກແລ້ວ' ?>
         </span>
     <?php endif; ?>
 </td>
@@ -125,15 +125,15 @@ $monks = $stmt->fetchAll();
                                 '<?= htmlspecialchars($monk['ordination_date']) ?>',
                                 '<?= htmlspecialchars($monk['age_pansa']) ?>',
                                 '<?= htmlspecialchars($monk['certificate_number']) ?>',
-                                '<?= htmlspecialchars($monk['status']) ?>',
-                                '<?= $monk['photo'] ? 'uploads/' . htmlspecialchars(basename($monk['photo'])) : '' ?>'
+                                '<?= htmlspecialchars($monk['status'] ?? 'active') ?>',
+                                '<?= $monk['photo'] ? BASE_URL . 'uploads/' . htmlspecialchars(basename($monk['photo'])) : '' ?>'
                             )" 
                             class="inline-flex items-center px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white text-xs font-medium rounded shadow">
                                 ເບິ່ງ
                             </button>
 
                             <!-- Edit Button -->
-                                <a href="edit_monk.php?id=<?= $monk['id'] ?>" 
+                                <a href="<?= BASE_URL ?>edit_monk.php?id=<?= $monk['id'] ?>" 
                                 class="inline-flex items-center px-3 py-1.5 bg-yellow-400 hover:bg-yellow-500 text-white text-xs font-medium rounded shadow">
                                     ແກ້ໄຂ
                                 </a>
@@ -187,10 +187,10 @@ $monks = $stmt->fetchAll();
 <script>
 pdfMake.fonts = {
     NotoSansLao: {
-        normal: '/tem_system/fonts/NotoSansLao-Regular.ttf',
-        bold: '/tem_system/fonts/NotoSansLao-Bold.ttf',
-        italics: '/tem_system/fonts/NotoSansLao-Regular.ttf',
-        bolditalics: '/tem_system/fonts/NotoSansLao-Bold.ttf'
+        normal: '<?= BASE_URL ?>fonts/NotoSansLao-Regular.ttf',
+        bold: '<?= BASE_URL ?>fonts/NotoSansLao-Bold.ttf',
+        italics: '<?= BASE_URL ?>fonts/NotoSansLao-Regular.ttf',
+        bolditalics: '<?= BASE_URL ?>fonts/NotoSansLao-Bold.ttf'
     }
 };
 
@@ -232,12 +232,11 @@ $(function() {
                             // ลบ HTML tags
                             return data.replace(/<.*?>/g, '');
                         }
-                    }
-                },
+                    },
                 title: 'ລາຍການຂໍ້ມູນພຣະສົງ',
                 filename: 'monks_data_' + new Date().toISOString().slice(0,10)
             },
-            {
+        
                 extend: 'excelHtml5',
                 text: 'ໂຫຼດ Excel',
                 className: 'bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg',
@@ -433,7 +432,7 @@ function toggleStatus(monkId, currentStatus, button) {
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
-                url: 'update_status.php',
+                url: '<?= BASE_URL ?>update_status.php',
                 type: 'POST',
                 data: {
                     monk_id: monkId,
@@ -482,7 +481,7 @@ function confirmDelete(id) {
         cancelButtonText: 'ຍົກເລີກ'
     }).then((result) => {
         if (result.isConfirmed) {
-            window.location.href = 'delete_monk.php?id=' + id;
+            window.location.href = '<?= BASE_URL ?>delete_monk.php?id=' + id;
         }
     });
 }

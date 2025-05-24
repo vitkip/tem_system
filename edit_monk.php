@@ -113,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             showConfirmButton: false,
             timer: 1500
         }).then(function(){
-            window.location = 'list_monks.php';
+            window.location = '".BASE_URL."list_monks.php';
         });
     </script>";
     exit;
@@ -128,7 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- ຮູບ Preview -->
     <div class="flex justify-center">
         <div class="flex flex-col items-center">
-            <img id="preview-image" src="<?= $monk['photo'] ? 'uploads/' . htmlspecialchars($monk['photo']) : 'https://via.placeholder.com/150' ?>" class="h-32 w-32 rounded-full object-cover border mb-3">
+            <img id="preview-image" src="<?= $monk['photo'] ? BASE_URL.'uploads/' . htmlspecialchars($monk['photo']) : 'https://via.placeholder.com/150' ?>" class="h-32 w-32 rounded-full object-cover border mb-3">
             <label for="photoInput" class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded cursor-pointer hover:bg-indigo-700 transition">
                 📷 ແກ້ໄຂຮູບ
             </label>
@@ -241,8 +241,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div>
                 <label class="block mb-1 text-gray-700">ສະຖານະ:</label>
                 <select name="status" class="w-full border rounded px-3 py-2">
-                    <option value="ບວດຢູ່" <?= trim($monk['status']) == 'ບວດຢູ່' ? 'selected' : '' ?>>🟢 ບວດຢູ່</option>
-                    <option value="ສຶກແລ້ວ" <?= trim($monk['status']) == 'ສຶກແລ້ວ' ? 'selected' : '' ?>>⚪ ສຶກແລ້ວ</option>
+                    <option value="active" <?= ($monk['status'] ?? 'active') === 'active' ? 'selected' : '' ?>>ຍັງບວດຢູ່</option>
+                    <option value="inactive" <?= ($monk['status'] ?? 'active') === 'inactive' ? 'selected' : '' ?>>ສຶກແລ້ວ</option>
                 </select>
             </div>
 
@@ -258,7 +258,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <button type="submit" class="bg-indigo-600 text-white px-8 py-3 rounded hover:bg-indigo-700 transition">
             💾 ບັນທຶກການແກ້ໄຂ
         </button>
-        <a href="list_monks.php" class="ml-4 text-indigo-600 underline">← ກັບໄປລາຍການ</a>
+        <a href="<?= BASE_URL ?>list_monks.php" class="ml-4 text-indigo-600 underline">← ກັບໄປລາຍການ</a>
     </div>
 </form>
 

@@ -9,7 +9,7 @@ checkAdminPermission();
 
 // รับ event id
 if (!isset($_GET['event_id'])) {
-    header('Location: list_events.php');
+    header('Location: ' . BASE_URL . 'event/list_events.php');
     exit;
 }
 
@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         showConfirmButton: false,
         timer: 1500
     }).then(() => {
-        window.location = 'list_events.php';
+        window.location = '".BASE_URL."event/list_events.php';
     });
     </script>";
     exit;
@@ -111,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded">
                 💾 ບັນທຶກການເລືອກ
             </button>
-            <a href="list_events.php" class="ml-4 text-indigo-600 underline">← ກັບໄປລາຍງານ</a>
+            <a href="<?= BASE_URL ?>event/list_events.php" class="ml-4 text-indigo-600 underline">← ກັບໄປລາຍງານ</a>
         </div>
 
     </form>

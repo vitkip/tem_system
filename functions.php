@@ -10,7 +10,7 @@ function isAdmin() {
 // เพิ่มฟังก์ชันอื่นๆ ที่ต้องใช้ร่วมกัน
 function checkPermission() {
     if (!isset($_SESSION['user_id'])) {
-        header('Location: /tem_system/register/login.php');
+        header('Location: ' . BASE_URL . 'register/login.php');
         exit();
     }
 }

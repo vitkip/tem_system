@@ -58,7 +58,7 @@ function generateMonkCard($monk) {
     // โลโก้วัดและการวางตำแหน่ง
     if (file_exists('assets/temple-logo.png')) {
         // ตำแหน่ง x คำนวณจากความกว้างของบัตร (85.6) ลบความกว้างของโลโก้ (10) ลบระยะขอบ (3)
-        $pdf->Image('assets/temple-logo.png', 72.6, 3, 10, 10, '', '', '', false, 300);
+        $pdf->Image(dirname(__FILE__) . '/assets/temple-logo.png', 72.6, 3, 10, 10, '', '', '', false, 300);
     }
 
     // หัวข้อบัตรพร้อมการจัดตำแหน่งที่ดีขึ้น
@@ -70,7 +70,7 @@ function generateMonkCard($monk) {
 
     // กรอบรูปภาพพร้อมการจัดตำแหน่งที่ดีขึ้น - ขยับลงด้านล่างอีกเล็กน้อย
     if (!empty($monk['photo']) && file_exists('uploads/' . $monk['photo'])) {
-        // พื้นหลังสีขาวสำหรับกรอบรูป - เพิ่มค่า Y จาก 9 เป็น 11
+        // พื้นหลังสีขาวสำหรับกรอบ - เพิ่มค่า Y จาก 9 เป็น 11
         $pdf->SetFillColor(255, 255, 255);
         $pdf->RoundedRect(5, 11, 26, 31, 2, '1111', 'DF');
         
@@ -80,7 +80,7 @@ function generateMonkCard($monk) {
         
         // การวางรูปภาพ - เพิ่มค่า Y จาก 9 เป็น 11
         $pdf->Image(
-            'uploads/' . $monk['photo'], 
+            dirname(__FILE__) . '/uploads/' . $monk['photo'], 
             6.4,  // x - ตำแหน่งแกน x
             11,   // y - ปรับลงด้านล่างเพิ่มอีก 2 หน่วย
             23,   // ความกว้าง
@@ -96,7 +96,6 @@ function generateMonkCard($monk) {
             0,     // เส้นขอบ
             false  // พอดีกรอบ - คงอัตราส่วนภาพ
         );
-        
     }
 
     // ข้อมูลพระสงฆ์พร้อมระยะห่างที่สม่ำเสมอ
@@ -163,7 +162,8 @@ function generateMonkCard($monk) {
     $qrData = json_encode([
         'id' => $monk['id'],
         'cert' => $monk['certificate_number'],
-        'name' => $monk['prefix'] . ' ' . $monk['first_name'] . ' ' . $monk['last_name']
+        'name' => $monk['prefix'] . ' ' . $monk['first_name'] . ' ' . $monk['last_name'],
+        'url' => BASE_URL . 'view_monk.php?id=' . $monk['id']
     ]);
 
     // QR code ที่มีขอบลดลง

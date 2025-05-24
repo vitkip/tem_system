@@ -6,7 +6,7 @@
 
         <!-- โลโก้ -->
         <div>
-            <img src="/tem_system/assets/logo.png" alt="Your Logo" class="h-50 w-16 rounded-full">
+            <img src="<?= BASE_URL ?>assets/logo.png" alt="Your Logo" class="h-50 w-16 rounded-full">
         </div>
 
         <!-- เมนู -->
@@ -16,9 +16,9 @@
             <?php if (isAdmin()): ?>
             <a href="add_monk.php" class="mb-2 md:mb-0 hover:text-indigo-600 transition">ເພີ່ມ</a>
             <?php endif; ?>
-            <a href="profile/profile.php" class="mb-2 md:mb-0 hover:text-indigo-600 transition">ໂປຣຟາຍ</a>
-            <a href="profile/edit_profile.php" class="mb-2 md:mb-0 hover:text-indigo-600 transition">ຕັ້ງຄ່າ</a>
-            <a href="register/logout.php" class="mb-2 md:mb-0 hover:text-indigo-600 transition">ອອກຈາກລະບົບ</a>
+            <a href="<?= BASE_URL ?>profile/profile.php" class="mb-2 md:mb-0 hover:text-indigo-600 transition">ໂປຣຟາຍ</a>
+            <a href="<?= BASE_URL ?>profile/edit_profile.php" class="mb-2 md:mb-0 hover:text-indigo-600 transition">ຕັ້ງຄ່າ</a>
+            <a href="<?= BASE_URL ?>register/logout.php" class="mb-2 md:mb-0 hover:text-indigo-600 transition">ອອກຈາກລະບົບ</a>
         </nav>
 
         <!-- ไอคอนโซเชียล -->

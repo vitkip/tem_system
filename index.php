@@ -1,9 +1,10 @@
 <?php
 session_start();
+require_once 'db.php'; // Include db.php to access BASE_URL constant
 
 // ถ้า login แล้ว ส่งเข้า dashboard เลย
 if (isset($_SESSION['user_id'])) {
-    header('Location: dashboard.php');
+    header('Location: ' . BASE_URL . 'dashboard.php');
     exit();
 }
 ?>
@@ -45,16 +46,16 @@ if (isset($_SESSION['user_id'])) {
 
 <body class="text-center p-6">
 
-    <img src="assets/logo.png" alt="Logo" class="h-40 w-30 mb-6 rounded-full shadow-xl animate-pulse">
+    <img src="<?= BASE_URL ?>assets/logo.png" alt="Logo" class="h-40 w-30 mb-6 rounded-full shadow-xl animate-pulse">
 
     <h2 class="text-5xl md:text-4xl font-bold text-indigo-500 mb-4 animate-bounce">ວັດປ່າໜອງບົວທອງໃຕ້ |ມະຫາຣຸກຂາວະຣາຣາມ|</h2>
     <p class="text-gray-600 text-lg mb-8 animate-fadeIn delay-500">ບໍລິຫານຂໍ້ມູນພຣະ, ແມ່ຂາວ, ສາມະເນນ ຢ່າງມືອາຊີບ ແລະປອດໄພ</p>
 
     <div class="flex flex-col md:flex-row gap-6">
-        <a href="register/login.php" class="px-8 py-3 bg-indigo-600 text-white rounded-full button-animated shadow-lg hover:bg-indigo-700 text-lg">
+        <a href="<?= BASE_URL ?>register/login.php" class="px-8 py-3 bg-indigo-600 text-white rounded-full button-animated shadow-lg hover:bg-indigo-700 text-lg">
             ເຂົ້າລະບົບ
         </a>
-        <a href="register/register.php" class="px-8 py-3 bg-white border border-indigo-600 text-indigo-600 rounded-full button-animated shadow-lg hover:bg-indigo-100 text-lg">
+        <a href="<?= BASE_URL ?>register/register.php" class="px-8 py-3 bg-white border border-indigo-600 text-indigo-600 rounded-full button-animated shadow-lg hover:bg-indigo-100 text-lg">
             ສະໝັກສະມາຊິກ
         </a>
     </div>

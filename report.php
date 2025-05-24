@@ -61,7 +61,7 @@ checkPermission();
         <!-- Report Cards Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <!-- Event Reports -->
-            <a href="report_events.php" class="report-card rounded-xl p-8 group">
+            <a href="<?= BASE_URL ?>report_events.php" class="report-card rounded-xl p-8 group">
                 <div class="flex items-start space-x-4">
                     <div class="report-icon bg-indigo-100 p-4 rounded-lg text-indigo-600 group-hover:bg-indigo-200">
                         📅
@@ -81,7 +81,7 @@ checkPermission();
             </a>
 
             <!-- Monk Reports -->
-            <a href="report_monks.php" class="report-card rounded-xl p-8 group">
+            <a href="<?= BASE_URL ?>report_monks.php" class="report-card rounded-xl p-8 group">
                 <div class="flex items-start space-x-4">
                     <div class="report-icon bg-purple-100 p-4 rounded-lg text-purple-600 group-hover:bg-purple-200">
                         👨‍🦲
@@ -101,7 +101,7 @@ checkPermission();
             </a>
 
             <!-- Individual Reports -->
-            <a href="report_by_monk.php" class="report-card rounded-xl p-8 group">
+            <a href="<?= BASE_URL ?>report_by_monk.php" class="report-card rounded-xl p-8 group">
                 <div class="flex items-start space-x-4">
                     <div class="report-icon bg-green-100 p-4 rounded-lg text-green-600 group-hover:bg-green-200">
                         🧾
@@ -121,7 +121,7 @@ checkPermission();
             </a>
 
             <!-- Export Reports -->
-            <a href="report_export.php" class="report-card rounded-xl p-8 group">
+            <a href="<?= BASE_URL ?>report_export.php" class="report-card rounded-xl p-8 group">
                 <div class="flex items-start space-x-4">
                     <div class="report-icon bg-red-100 p-4 rounded-lg text-red-600 group-hover:bg-red-200">
                         📥

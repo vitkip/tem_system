@@ -97,15 +97,17 @@ if (!empty($ordination_date)) {
     if (empty($errors)) {
         $stmt = $pdo->prepare("
             INSERT INTO monks 
-            (prefix, first_name, last_name, birth_date, nationality, ethnicity, birthplace_village, birthplace_district, birthplace_province, father_name, mother_name, current_temple, ordination_date, age_pansa, certificate_number, photo, status, notes)
+            (prefix, first_name, last_name, birth_date, nationality, ethnicity, birthplace_village, 
+            birthplace_district, birthplace_province, father_name, mother_name, current_temple, 
+            ordination_date, age_pansa, certificate_number, photo, notes)
             VALUES
-            (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ");
         $stmt->execute([
             $prefix, $first_name, $last_name, $birth_date, $nationality, $ethnicity,
             $birthplace_village, $birthplace_district, $birthplace_province,
             $father_name, $mother_name, $current_temple,
-            $ordination_date, $age_pansa, $certificate_number, $photo, $status, $notes
+            $ordination_date, $age_pansa, $certificate_number, $photo, $notes
         ]);
 
         echo "
@@ -117,7 +119,7 @@ if (!empty($ordination_date)) {
                 showConfirmButton: false,
                 timer: 1500
             }).then(function(){
-                window.location = 'list_monks.php';
+                window.location = '".BASE_URL."list_monks.php';
             });
         </script>";
         exit;
@@ -194,9 +196,9 @@ if (!empty($ordination_date)) {
         </div>
     </div>
 
-    <!-- ສະຖານທີ່ເກີດ -->
+    <!-- ສະຖານທີເກີດ -->
     <div>
-        <h2 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">🗺️ ສະຖານທີ່ເກີດ</h2>
+        <h2 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">🗺️ ສະຖານທີເກີດ</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
                 <label class="block mb-1 text-gray-700">ບ້ານເກີດ:</label>
@@ -274,7 +276,7 @@ if (!empty($ordination_date)) {
         <button type="submit" class="bg-indigo-600 text-white px-8 py-3 rounded hover:bg-indigo-700 transition">
             💾 ບັນທຶກຂໍ້ມູນ
         </button>
-        <a href="list_monks.php" class="ml-4 text-indigo-600 underline">← ກັບໄປລາຍການ</a>
+        <a href="<?= BASE_URL ?>list_monks.php" class="ml-4 text-indigo-600 underline">← ກັບໄປລາຍການ</a>
     </div>
 </form>
 

@@ -27,7 +27,7 @@ $events = $pdo->query("SELECT * FROM events ORDER BY event_date DESC")->fetchAll
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-3xl font-bold text-indigo-700">📅 ລາຍການງານກິດນິມົນ</h1>
         <?php if (isAdmin()): ?>
-            <a href="add_event.php" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow">
+            <a href="<?= BASE_URL ?>event/add_event.php" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow">
                 ➕ ເພີ່ມງານກິດ
             </a>
         <?php endif; ?>
@@ -54,17 +54,17 @@ $events = $pdo->query("SELECT * FROM events ORDER BY event_date DESC")->fetchAll
                     <td><?= htmlspecialchars($event['event_time']) ?></td>
                     <td><?= htmlspecialchars($event['location']) ?></td>
                     <td class="space-x-1 text-sm">
-                        <a href="view_event.php?id=<?= $event['id'] ?>" class="inline-flex items-center bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600">
+                        <a href="<?= BASE_URL ?>event/view_event.php?id=<?= $event['id'] ?>" class="inline-flex items-center bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600">
                             👁️ ເບິ່ງ
                         </a>
                         <?php if (isAdmin()): ?>
-                        <a href="edit_event.php?id=<?= $event['id'] ?>" class="inline-flex items-center bg-yellow-400 text-white px-2 py-1 rounded hover:bg-yellow-500">
+                        <a href="<?= BASE_URL ?>event/edit_event.php?id=<?= $event['id'] ?>" class="inline-flex items-center bg-yellow-400 text-white px-2 py-1 rounded hover:bg-yellow-500">
                             ✏️ ແກ້ໄຂ
                         </a>
                         <button onclick="deleteEvent(<?= $event['id'] ?>)" class="inline-flex items-center bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">
                             🗑️ ລຶບ
                         </button>
-                        <a href="assign_monks.php?event_id=<?= $event['id'] ?>" class="inline-flex items-center bg-indigo-500 text-white px-2 py-1 rounded hover:bg-indigo-600">
+                        <a href="<?= BASE_URL ?>event/assign_monks.php?event_id=<?= $event['id'] ?>" class="inline-flex items-center bg-indigo-500 text-white px-2 py-1 rounded hover:bg-indigo-600">
                             🙏 ເລືອກພຣະ
                         </a>
                         <?php endif; ?>
@@ -130,7 +130,7 @@ function deleteEvent(id) {
         cancelButtonText: 'ຍົກເລີກ'
     }).then((result) => {
         if (result.isConfirmed) {
-            window.location.href = 'delete_event.php?id=' + id;
+            window.location.href = '<?= BASE_URL ?>event/delete_event.php?id=' + id;
         }
     });
 }

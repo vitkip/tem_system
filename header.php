@@ -82,21 +82,21 @@ require_once 'functions.php';
             <!-- Logo + Main Nav -->
             <div class="flex items-center justify-between flex-1 md:justify-start">
                 <!-- Logo -->
-                <a href="/tem_system/dashboard.php" class="flex-shrink-0">
-                    <img src="/tem_system/assets/logo.png" alt="Logo" class="h-10 w-10">
+                <a href="<?= BASE_URL ?>dashboard.php" class="flex-shrink-0">
+                    <img src="<?= BASE_URL ?>assets/logo.png" alt="Logo" class="h-10 w-10">
                 </a>
 
                 <!-- Desktop Menu -->
                 <div class="hidden md:flex md:ml-6 md:space-x-6">
-                    <a href="/tem_system/dashboard.php" 
+                    <a href="<?= BASE_URL ?>dashboard.php" 
                        class="text-sm font-medium <?= ($current_page == 'dashboard.php') ? 'text-indigo-600 underline' : 'text-gray-700 hover:text-indigo-600' ?>">
                         Dashboard
                     </a>
-                    <a href="/tem_system/list_monks.php" 
+                    <a href="<?= BASE_URL ?>list_monks.php" 
                        class="text-sm font-medium <?= ($current_page == 'list_monks.php') ? 'text-indigo-600 underline' : 'text-gray-700 hover:text-indigo-600' ?>">
                         ລວມລາຍຊື່
                     </a>
-                    <a href="/tem_system/event/calendar.php" 
+                    <a href="<?= BASE_URL ?>event/calendar.php" 
                        class="text-sm font-medium <?= ($current_page == 'calendar.php') ? 'text-indigo-600 underline' : 'text-gray-700 hover:text-indigo-600' ?>">
                         ປະຕິທິນ
                     </a>
@@ -117,7 +117,7 @@ require_once 'functions.php';
             <div class="flex items-center">
                 <div class="relative">
                     <button id="userMenuButton" class="flex items-center space-x-2 focus:outline-none">
-                        <img src="/tem_system/uploads/<?= htmlspecialchars($_SESSION['profile_image'] ?? 'default.png') ?>" 
+                        <img src="<?= BASE_URL ?>uploads/<?= htmlspecialchars($_SESSION['profile_image'] ?? 'default.png') ?>" 
                              class="h-9 w-9 rounded-full object-cover border" 
                              alt="Profile">
                         <span class="hidden md:inline font-medium text-gray-700 text-sm">
@@ -127,29 +127,29 @@ require_once 'functions.php';
 
                     <!-- User Dropdown Menu -->
                     <div id="userDropdown" class="hidden absolute right-0 mt-2 w-52 bg-white border border-gray-200 rounded-md shadow-lg py-2 z-50">
-                        <a href="/tem_system/profile/profile.php"
+                        <a href="<?= BASE_URL ?>profile/profile.php"
                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">ໂປຣໄຟລ໌</a>
-                        <a href="/tem_system/profile/edit_profile.php"
+                        <a href="<?= BASE_URL ?>profile/edit_profile.php"
                         
                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">ຕັ້ງຄ່າ</a>
                            
-                           <a href="/tem_system/dashboard.php"
+                           <a href="<?= BASE_URL ?>dashboard.php"
                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 <?= ($current_page == 'dashboard.php') ?>">
                         Dashboard
                             </a>
 
                         <?php if (isAdmin()): ?>
                             <div class="border-t border-gray-100 my-1"></div>
-                            <a href="/tem_system/admin/manage_users.php"
-                               class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">ຈັດການຜູ້ໃຊ້</a>
-                            <a href="/tem_system/event/add_event.php"
+                            <a href="<?= BASE_URL ?>admin/manage_users.php"
+                               class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">ຈັດການຜູ່ໃຊ້</a>
+                            <a href="<?= BASE_URL ?>event/add_event.php"
                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">ເພີ່ມກິດນິມົນ</a>
-                               <a href="/tem_system/report.php"
+                               <a href="<?= BASE_URL ?>report.php"
                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">ອອກບັດ</a>
                             
                         <?php endif; ?>
                         <div class="border-t border-gray-100 my-1"></div>
-                        <a href="/tem_system/register/logout.php"
+                        <a href="<?= BASE_URL ?>register/logout.php"
                            class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50">ອອກຈາກລະບົບ</a>
                     </div>
                 </div>
@@ -159,16 +159,16 @@ require_once 'functions.php';
         <!-- Mobile Menu (Slide Down) -->
         <div id="mobileMenu" class="hidden md:hidden">
             <div class="px-2 pt-2 pb-3 space-y-1 bg-white border-t border-gray-200">
-                <a href="/tem_system/dashboard.php" 
+                <a href="<?= BASE_URL ?>dashboard.php" 
                    class="block px-3 py-2 rounded-md text-base font-medium <?= ($current_page == 'dashboard.php') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-700 hover:bg-gray-50' ?>">
                     Dashboard
                 </a>
-                <a href="/tem_system/list_monks.php" 
-                   class="block px-3 py-2 rounded-md text-base font-medium <?= ($current_page == 'list_monks.php') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-700 hover:bg-gray-50' ?>">
+                <a href="<?= BASE_URL ?>list_monks.php" 
+                   class="block px-3 py-2 rounded-md textbase font-medium <?= ($current_page == 'list_monks.php') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-700 hover:bg-gray-50' ?>">
                     ລວມລາຍຊື່
                 </a>
-                <a href="/tem_system/event/calendar.php" 
-                   class="block px-3 py-2 rounded-md text-base font-medium <?= ($current_page == 'calendar.php') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-700 hover:bg-gray-50' ?>">
+                <a href="<?= BASE_URL ?>event/calendar.php" 
+                   class="block px-3 py-2 rounded-md textbase font-medium <?= ($current_page == 'calendar.php') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-700 hover:bg-gray-50' ?>">
                     ປະຕິທິນ
                 </a>
             </div>

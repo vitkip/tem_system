@@ -22,11 +22,11 @@ function generateMonkCard($monk) {
     $pdf->AddPage();
 
     // เพิ่ม background
-    $pdf->Image('assets/card-bg.png', 0, 0, 85.6, 54);
+    $pdf->Image(dirname(__FILE__) . '/assets/card-bg.png', 0, 0, 85.6, 54);
 
     // เพิ่มรูปภาพ
     if ($monk['photo']) {
-        $pdf->Image('uploads/' . $monk['photo'], 5, 10, 25, 30);
+        $pdf->Image(dirname(__FILE__) . '/uploads/' . $monk['photo'], 5, 10, 25, 30);
     }
 
     // เพิ่มข้อมูล
@@ -71,7 +71,7 @@ function generateMonkCard($monk) {
         <!-- Search Form -->
         <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
             <h2 class="text-2xl font-bold text-indigo-600 mb-6">ຄົ້ນຫາພຣະ</h2>
-            <form method="GET" action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>" class="space-y-4">
+            <form method="GET" action="<?= BASE_URL ?>report_by_monk.php" class="space-y-4">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                         <label for="name" class="block text-sm font-medium text-gray-700 mb-2">ຊື່-ນາມສະກຸນ</label>
@@ -134,7 +134,7 @@ function generateMonkCard($monk) {
                         <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
                             <div class="flex items-start space-x-4">
                                 <?php if ($monk['photo']): ?>
-                                    <img src="uploads/<?= htmlspecialchars($monk['photo']) ?>" 
+                                    <img src="<?= BASE_URL ?>uploads/<?= htmlspecialchars($monk['photo']) ?>" 
                                          class="w-24 h-24 rounded-lg object-cover" alt="Photo">
                                 <?php endif; ?>
                                 <div class="flex-1">
@@ -146,7 +146,7 @@ function generateMonkCard($monk) {
                                     
                                     <!-- Export Button -->
                                     <!-- เปลี่ยนจาก form เป็น link และเปิดในหน้าต่างใหม่ -->
-                                    <a href="export_card.php?monk_id=<?= $monk['id'] ?>" 
+                                    <a href="<?= BASE_URL ?>export_card.php?monk_id=<?= $monk['id'] ?>" 
                                        target="_blank"
                                        class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg 
                                               hover:bg-green-700 transition-colors focus:outline-none focus:ring-2 

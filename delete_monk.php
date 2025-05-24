@@ -9,7 +9,7 @@ checkAdminPermission();
 
 // ตรวจสอบ ID
 if (!isset($_GET['id'])) {
-    header('Location: list_monks.php');
+    header('Location: ' . BASE_URL . 'list_monks.php');
     exit();
 }
 
@@ -34,7 +34,7 @@ try {
     $stmt->execute([$id]);
 
     // Redirect กลับไปหน้า list
-    header('Location: list_monks.php?deleted=success');
+    header('Location: ' . BASE_URL . 'list_monks.php?deleted=success');
     exit();
     
 } catch (PDOException $e) {

@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <div class="text-center mt-6">
             <button type="submit" class="bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700">💾 ບັນທຶກຂໍ້ມູນ</button>
-            <a href="list_events.php" class="ml-4 text-indigo-600 underline">← ກັບໄປ</a>
+            <a href="<?= BASE_URL ?>event/list_events.php" class="ml-4 text-indigo-600 underline">← ກັບໄປ</a>
         </div>
     </form>
 </div>

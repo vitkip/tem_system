@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['role'] = $user['role'];
             $_SESSION['profile_image'] = $user['profile_image'];
 
-            header('Location:../dashboard.php');
+            header('Location: ' . BASE_URL . 'dashboard.php');
             exit();
         } else {
             $error = '❌ ລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ';
@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
     <div class="flex justify-center mb-6">
-        <img src="../assets/logo.png" alt="ໂລໂກ້" class="h-20 w-16 rounded-full">
+        <img src="<?= BASE_URL ?>assets/logo.png" alt="ໂລໂກ້" class="h-20 w-16 rounded-full">
     </div>
 
     <h2 class="text-2xl font-bold text-center mb-6">ເຂົ້າລະບົບ</h2>
@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </form>
 
     <div class="text-center mt-4">
-        <a href="../register/register.php" class="text-blue-500 underline">ຍັງບໍ່ມີບັນຊີ? ລົງທະບຽນ</a>
+        <a href="<?= BASE_URL ?>register/register.php" class="text-blue-500 underline">ຍັງບໍ່ມີບັນຊີ? ລົງທະບຽນ</a>
     </div>
 </div>
 

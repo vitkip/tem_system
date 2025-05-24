@@ -21,7 +21,7 @@ foreach ($events as $event) {
 <div class="flex justify-between items-center mb-6">
     <h1 class="text-3xl font-bold text-indigo-700">ປະຕິທິນງານກິດນິມົນ</h1>
     <?php if (isAdmin()): ?>
-        <a href="/tem_system/event/add_event.php" class="bg-indigo-600 text-white px-5 py-2 rounded hover:bg-indigo-700">
+        <a href="<?= BASE_URL ?>event/add_event.php" class="bg-indigo-600 text-white px-5 py-2 rounded hover:bg-indigo-700">
             ➕ ເພີ່ມງານກິດ
         </a>
     <?php endif; ?>
@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         events: <?= json_encode($events_for_calendar) ?>,
         eventClick: function(info) {
-            window.location.href = 'view_event.php?id=' + info.event.id;
+            window.location.href = '<?= BASE_URL ?>event/view_event.php?id=' + info.event.id;
         }
     });
 

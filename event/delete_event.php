@@ -4,7 +4,7 @@ session_start();
 
 // ตรวจสอบการเข้าสู่ระบบ
 if (!isset($_SESSION['user_id'])) {
-    header('Location: ../register/login.php');
+    header('Location: ' . BASE_URL . 'register/login.php');
     exit();
 }
 
@@ -25,6 +25,6 @@ $stmt = $pdo->prepare("DELETE FROM events WHERE id = ?");
 $stmt->execute([$id]);
 
 // หลังลบเสร็จ กลับไปยังรายการ
-header('Location: list_events.php?deleted=success');
+header('Location: ' . BASE_URL . 'event/list_events.php?deleted=success');
 exit();
 ?>

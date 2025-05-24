@@ -26,7 +26,7 @@ foreach ($monkStats as $row) {
     $monkData[] = [
         'name' => $row['monk_name'],
         'y' => (int)$row['event_count'],
-        'url' => "view_monk.php?id=" . $row['id']
+        'url' => BASE_URL . "view_monk.php?id=" . $row['id']
     ];
 }
 
@@ -91,7 +91,7 @@ $countSangkhali = $pdo->query("SELECT COUNT(*) FROM monks WHERE prefix = 'ສັ
     <div class="flex justify-between items-center">
         <h1 class="text-2xl font-bold text-indigo-700">ໜ້າສະຫຼຸບລາຍງານ|ແດງກຣາບ|ງານກິດນິມນ|ແຈ້ງເຕືອນ|</h1>
         <?php if (isAdmin()): ?>
-        <a href="add_monk.php" class="inline-flex items-center bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
+        <a href="<?= BASE_URL ?>add_monk.php" class="inline-flex items-center bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
             ➕ ເພີ່ມ
         </a>
         <?php endif; ?>
@@ -250,10 +250,9 @@ document.addEventListener('DOMContentLoaded', function () {
         }]
     });
 });
-
 Highcharts.chart('monkActivityChart', {
     chart: { type: 'column' },
-    title: { text: 'ຈຳນວນງານກິດນິມນທີ່ພຣະໄປຮ່ວມ' },
+    title: { text: 'ຈຳນວນງານກິດນິມນທີ່ພຣະ ແລະ ສາມະເນນໄປຮ່ວມ' },
     xAxis: { type: 'category', title: { text: 'ລາຍຊື່ຜູ້ທີ່ໄປອອກງານ' } },
     yAxis: {
         min: 0,
@@ -280,9 +279,12 @@ Highcharts.chart('monkActivityChart', {
         pointFormat: 'ໄປຮ່ວມງານ: <b>{point.y}</b> ຄັ້ງ'
     },
     series: [{
-        name: 'ພຣະ',
+        name: 'ພຣະ/ສາມະເນນ',
         colorByPoint: true,
-        data: <?= json_encode($monkData, JSON_UNESCAPED_UNICODE) ?>
+        data: <?= json_encode(array_filter($monkData, function($item) {
+            // Only show monks with prefix ພຣະ or ສ.ນ
+            return strpos($item['name'], 'ພຣະ') === 0 || strpos($item['name'], 'ສ.ນ') === 0;
+        }), JSON_UNESCAPED_UNICODE) ?>
     }]
 });
 

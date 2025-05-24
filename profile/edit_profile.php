@@ -4,7 +4,7 @@ require '../db.php';
 
 // ຖ້າບໍ່ໄດ້ login
 if (!isset($_SESSION['user_id'])) {
-    header('Location: register/login.php');
+    header('Location: ' . BASE_URL . 'register/login.php');
     exit();
 }
 
@@ -97,7 +97,7 @@ if (isset($_POST['change_password'])) {
                 <!-- Current Profile Image -->
                 <div class="relative group">
                     <div class="h-32 w-32 rounded-full overflow-hidden border-4 border-white shadow-lg">
-                        <img src="../uploads/<?= htmlspecialchars($user['profile_image'] ?? 'default.png') ?>" 
+                        <img src="<?= BASE_URL ?>uploads/<?= htmlspecialchars($user['profile_image'] ?? 'default.png') ?>" 
                              alt="Profile" 
                              class="h-full w-full object-cover">
                     </div>
@@ -232,7 +232,7 @@ if (isset($_POST['change_password'])) {
 
             <!-- Back Button -->
             <div class="mt-8 flex justify-center">
-                <a href="../profile/profile.php" 
+                <a href="<?= BASE_URL ?>profile/profile.php" 
                    class="inline-flex items-center px-6 py-3 border-2 border-indigo-600 text-indigo-600 rounded-lg 
                           hover:bg-indigo-50 transition-all duration-200">
                     <i class="fas fa-arrow-left mr-2"></i>
